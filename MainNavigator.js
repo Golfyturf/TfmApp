@@ -3,6 +3,8 @@ import {Dimensions} from 'react-native';
 import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import Login from './Components/Login/Login';
+import Register from './Components/Register/Register';
+import Home from './Components/Home/Home'
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -16,6 +18,18 @@ const MainNavigator = createStackNavigator({
       header: null,
     },
   },
+  Register: {
+    screen: Register,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  HomeScreen:{
+    screen:Home,
+    navigationOptions: {
+      header: null,
+    },
+  }
 });
 
 const App = createAppContainer(MainNavigator);

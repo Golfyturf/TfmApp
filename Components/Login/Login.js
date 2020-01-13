@@ -7,7 +7,6 @@ import {
   StatusBar,
   SafeAreaView,
   TextInput,
-  Image,
   Dimensions,
   TouchableOpacity,
   ImageBackground,
@@ -99,7 +98,7 @@ class LogIn extends Component {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => {}}>
+                  onPress={() => {this.props.navigation.navigate('Register')}}>
                   <Text style={styles.registrateBtn}>
                     ¿No tienes cuenta? Regístrate
                   </Text>
