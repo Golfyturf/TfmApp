@@ -85,7 +85,7 @@ class LogIn extends Component {
                     maxLength={40}
                   />
                 <TouchableOpacity style={styles.loginButton}
-                  onPress={this.login}>
+                  onPress={() => this.login(this.props.navigation)}>
                   <Text style={styles.loginTextButton}>
                     Iniciar Sesión
                   </Text>
@@ -130,7 +130,7 @@ class LogIn extends Component {
     }
   };
 
-  login = () =>{
+  login = (navigation) =>{
     
     var bodyFormData = new FormData();
     bodyFormData.append('user', this.state.email);
@@ -147,7 +147,10 @@ class LogIn extends Component {
     .then(response =>{
         var user_data = response.data;
         this._storeData(user_data);
-        console.log(user_data);
+        if(user_data.validation === true)
+        {
+          navigation.navigate('HomeScreen');
+        }
 
         
     })

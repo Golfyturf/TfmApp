@@ -242,7 +242,7 @@ class MyLocationMapMarker extends React.Component {
                                                 this.state.itemSelected.coordinate.longitude,
                                                 1
                                                 )}}>
-                                        <Image style={{width:30,height:30}} source={maps}/>
+                                        <Image style={{width:30,height:30}} source={null}/>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={styles.buttons}
@@ -252,7 +252,7 @@ class MyLocationMapMarker extends React.Component {
                                                 this.state.itemSelected.coordinate.longitude,
                                                 2
                                                 )}}>
-                                        <Image style={{width:30,height:30}}  source={waze}/>
+                                        <Image style={{width:30,height:30}}  source={null}/>
                                     </TouchableOpacity>
                                 </View>
                             </View>
