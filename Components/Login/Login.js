@@ -1,22 +1,25 @@
 import React, {Component} from 'react';
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 import {
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-  SafeAreaView,
-  TextInput,
-  Image,
-  Dimensions,
-  TouchableOpacity,
-  ImageBackground,
-  Alert,
-  ActivityIndicator,
+    StyleSheet,
+    ScrollView,
+    View,
+    Text,
+    StatusBar,
+    SafeAreaView,
+    TextInput,
+    Image,
+    Dimensions,
+    TouchableOpacity,
+    ImageBackground,
+    Alert,
+    ActivityIndicator,
 } from 'react-native';
+import logo from '../../assets/images/logo_gyt.png';
 
 const {width: WIDTH} = Dimensions.get('window');
-const HEIGHT = Math.round(Dimensions.get('window').height);
+const HEIGHT = Dimensions.get('window').height;
 
 class LogIn extends Component {
   constructor(props) {
@@ -26,10 +29,6 @@ class LogIn extends Component {
       password: '',
     };
   }
-
-
-
-
 
   updateUserSignUpInfo = (event, type) => {
     var updatedUserSignUpInfo = {
@@ -50,20 +49,17 @@ class LogIn extends Component {
       <>
         <StatusBar barStyle="dark-content" />
         <SafeAreaView>
-          <View style={styles.parteArriba}>
-            <ImageBackground
-              source={null}
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={styles.parteArribaImagen}
-            />
-          </View>
           <ScrollView
-            contentContainerStyle={{flexGrow: 1, alignItems: 'center'}}
+            contentContainerStyle={{flexGrow: 1}}
             style={styles.scrollView}>
-            <View style={styles.parteAbajo}>
+              <View style={styles.logoContainer}>
+                <ImageBackground
+                  source={logo}
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  style={styles.logo}
+                />
+              </View>
               <View style={styles.inputContainer}>
-                <View style={styles.inputSection}>
-                  
                   <TextInput
                     style={styles.userTextInput}
                     placeholder={'Correo'}
@@ -75,8 +71,6 @@ class LogIn extends Component {
                     }
                     maxLength={40}
                   />
-                </View>
-                <View style={styles.inputSection}>
                   
                   <TextInput
                     style={styles.userTextInput}
@@ -90,10 +84,14 @@ class LogIn extends Component {
                     }
                     maxLength={40}
                   />
-                </View>
+                <TouchableOpacity style={styles.loginButton}
+                  onPress={this.login}>
+                  <Text style={styles.loginTextButton}>
+                    Iniciar Sesión
+                  </Text>
+                </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() =>{}
-                  }>
+                  onPress={() =>{}}>
                   <Text style={styles.forgetPss}>
                     ¿Has olvidado tu contraseña?
                   </Text>
@@ -105,61 +103,87 @@ class LogIn extends Component {
                   </Text>
                 </TouchableOpacity>
               </View>
-            </View>
           </ScrollView>
         </SafeAreaView>
       </>
     );
   }
+
+  _retrieveData = async (key) => {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      if (value !== null) {
+        console.log(value);
+      }
+    } catch (error) {
+      console.log("error getr")
+      console.log(error)
+    }
+  };
+
+  _storeData = async (user_data) => {
+    try {
+      await AsyncStorage.setItem('user', user_data.user, ()=>this._retrieveData('user'));
+      await AsyncStorage.setItem('idUser', user_data.idUser, ()=> this._retrieveData('idUser'));
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  login = () =>{
+    
+    var bodyFormData = new FormData();
+    bodyFormData.append('user', this.state.email);
+    bodyFormData.append('password', this.state.password);    
+
+    const headers = {
+        'Content-Type': 'multipart/form-data',
+        "Access-Control-Allow-Origin": "*",
+    }
+
+    axios.post("https://golfyturf.com/tfmApp/AppWebServices/checkLogin.php",
+        bodyFormData,
+        headers)
+    .then(response =>{
+        var user_data = response.data;
+        this._storeData(user_data);
+        console.log(user_data);
+
+        
+    })
+    .catch((error) => {
+        console.log(error)
+        var errorMessage = error.message;
+        dispatch(saveError(errorMessage));
+        dispatch(endLoading());
+    })
+  }
+
+
 }
 
 
 const styles = StyleSheet.create({
-  parteArriba: {
+  logoContainer: {
     backgroundColor: '#FFFFFF',
-    height: HEIGHT * 0.3,
+    height: HEIGHT * 0.5,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  parteArribaImagen: {
+    padding: 50
+  }, 
+  logo: {
     width: '100%',
     height: '100%',
     alignSelf: 'center',
-  },
-  parteAbajo: {
-    marginTop: '20%',
+    padding: 0,
   },
   scrollView: {
     backgroundColor: '#FFFFFF',
-  },
-  logoContainer: {
-    alignItems: 'flex-start',
-    flexWrap: 'wrap',
-    flexDirection: 'column',
-    marginTop: 30,
-    // eslint-disable-next-line no-dupe-keys
-    alignItems: 'center',
-    alignSelf: 'center',
   },
   errorMessage: {
     fontSize: 20,
     color: 'red',
     textAlign: 'center',
-  },
-  logo: {
-    width: 105,
-    height: 105,
-  },
-  inputSection: {
-    height: 60,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    width: WIDTH - 30,
-    borderRadius: 10,
-    color: '#454A4D',
-    borderColor: '#454A4D',
-    borderWidth: 2,
-    marginBottom: 10,
   },
   Icon: {
     padding: 10,
@@ -170,15 +194,17 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   userTextInput: {
+    height: 45,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: WIDTH*0.8,
+    borderRadius: 10,
+    borderWidth: 2,
+    marginBottom: 10,
     color: 'black',
-    height: 50,
-    width: WIDTH - 100,
-    // borderColor: '#454A4D',
-    paddingLeft: 25,
+    borderColor: '#027f01',
+    paddingLeft: 10,
     fontSize: 17,
-    marginBottom: 30,
-    // borderRadius: 10,
-    // color: '#454A4D',
   },
   textImg: {
     width: 350,
@@ -211,18 +237,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 3,
-    width: WIDTH - 55,
+    width: WIDTH*0.8,
     height: 50,
     borderRadius: 10,
-    backgroundColor: '#ffc326',
+    backgroundColor: '#027f01',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 50,
+    marginTop: 10, 
     marginBottom: 20,
   },
   loginTextButton: {
     fontSize: 17,
-    color: '#000000',
+    color: '#ffffff',
   },
   registrateBtn: {
     textAlign: 'center',
