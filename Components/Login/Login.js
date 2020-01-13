@@ -89,6 +89,7 @@ class LogIn extends Component {
                     }
                     maxLength={40}
                   />
+                  
                 </View>
                 <TouchableOpacity
                   onPress={() =>{}

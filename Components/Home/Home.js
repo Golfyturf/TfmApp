@@ -212,7 +212,7 @@ class MyLocationMapMarker extends React.Component {
                     transparent={true}
                     visible={this.state.modalVisible}>
                     <View style={styles.modalcontainer}>
-                        <ImageBackground source={img} style={{ width: '100%', height: '100%' }} />
+                        <ImageBackground source={null} style={{ width: '100%', height: '100%' }} />
                         <View style={{flexDirection:'row'}}>
                             <View style={styles.columnleft}>
                                 <TouchableOpacity
