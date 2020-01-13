@@ -16,11 +16,13 @@ import {
   StatusBar,
 } from 'react-native';
 
-import Login from './Components/Login/Login'
+import Login from './Components/Login/Login';
+
+import MainNavigator from './MainNavigator';
 const App: () => React$Node = () => {
   return (
     <>
-      <Login></Login>
+      <MainNavigator/>
     </>
   );
 };
