@@ -149,6 +149,7 @@ class MyLocationMapMarker extends React.Component {
         return (
             <View style={styles.container}>
                 <MapView
+                    provider={PROVIDER_GOOGLE} 
                     mapType='satellite'
                     style={styles.map}
                     initialRegion={this.state.region}
