@@ -259,8 +259,7 @@ class MyLocationMapMarker extends React.Component {
                         </View>
                     </View>           
                 </Modal>
-                <MapView
-                    provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                <MapView // remove if not using Google Maps
                     style={styles.map}
                     initialRegion={this.state.region}
                     showsUserLocation={true}

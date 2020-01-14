@@ -17,9 +17,10 @@ import {
     ActivityIndicator,
 } from 'react-native';
 import logo from '../../assets/images/logo_gyt.png';
+import ball from '../../assets/images/golfBall3.png';
 
 const {width: WIDTH} = Dimensions.get('window');
-const HEIGHT = Dimensions.get('window').height;
+const {height: HEIGHT} = Dimensions.get('window');
 
 class LogIn extends Component {
   constructor(props) {
@@ -45,17 +46,18 @@ class LogIn extends Component {
 
 
   render() {
-    return (
-      <>
-        <StatusBar barStyle="dark-content" />
-        <SafeAreaView>
+    return (    
+      <View style={styles.loginContainer}>
           <ScrollView
             contentContainerStyle={{flexGrow: 1}}
             style={styles.scrollView}>
               <View style={styles.logoContainer}>
-                <ImageBackground
+                <Image
+                  source={ball}
+                  style={styles.backgroundContainer}
+                />
+                <Image
                   source={logo}
-                  // eslint-disable-next-line react-native/no-inline-styles
                   style={styles.logo}
                 />
               </View>
@@ -104,8 +106,7 @@ class LogIn extends Component {
                 </TouchableOpacity>
               </View>
           </ScrollView>
-        </SafeAreaView>
-      </>
+      </View>  
     );
   }
 
@@ -167,16 +168,29 @@ class LogIn extends Component {
 
 
 const styles = StyleSheet.create({
+  loginContainer:{
+    width: WIDTH,
+    height: HEIGHT,
+  },
+  backgroundContainer:{
+    width: WIDTH * 0.9,
+    height: '45%',
+    borderBottomLeftRadius: 400,
+    borderBottomRightRadius: 400,
+    opacity: 0.5
+  },
   logoContainer: {
     backgroundColor: '#FFFFFF',
     height: HEIGHT * 0.5,
+    width: WIDTH,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 50
+    paddingHorizontal: WIDTH * 0
   }, 
   logo: {
-    width: '100%',
-    height: '100%',
+    marginTop: 20,
+    width: '55%',
+    height: '50%',
     alignSelf: 'center',
     padding: 0,
   },
