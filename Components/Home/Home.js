@@ -2,18 +2,16 @@ import MapView, { PROVIDER_GOOGLE, Marker, AnimatedRegion, Callout } from 'react
 import {
     StyleSheet,
     View,
-    Image,
     Dimensions,
-    TouchableOpacity,
-    Text,
-    Linking,
     FlatList,
-    ImageBackground,
-    Modal
+    Text
 } from 'react-native';
 import React from 'react';
 import ViewPark from './ViewPark';
 import RNLocation from 'react-native-location';
+import markerIcon from '../../assets/images/golfmark.png';
+import marker2 from '../../assets/images/golfmark.png';
+import CustomCallout from './CustomCallout.js';
 import Axios from 'axios';
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
@@ -27,7 +25,15 @@ class MyLocationMapMarker extends React.Component {
             modalVisible: false,
             itemSelected: { id: 1, nombre: 'SAFASASA', dir: 'calle 130', coordinate: { latitude: 4.705585, longitude: -74.081431 } },
             region: null,
-            parqueaderos: [],
+            GolfCars: [
+                {id: 1, nombre:'TXT23' },
+                {id: 2, nombre:'TXT33'},
+                {id: 3, nombre:'TXT33' },
+                {id: 4, nombre:'TXT23' },
+                {id: 5, nombre:'TXT23' },
+                {id: 6, nombre:'TXT23'},
+
+            ],
             markerObjects: []
         };
 
@@ -37,26 +43,15 @@ class MyLocationMapMarker extends React.Component {
             }))
         };
         this._getLocationAsync();
-
-    }
-    getKilometros = function(lat1,lon1,lat2,lon2)
-    {
-        rad = function(x) {return x*Math.PI/180;}
-        var R = 6378.137; //Radio de la tierra en km
-        var dLat = rad( lat2 - lat1 );
-        var dLong = rad( lon2 - lon1 );
-        var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLong/2) * Math.sin(dLong/2);
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        var d = R * c;
-        return d.toFixed(1); //Retorna tres decimales
     }
 
     _getLocationAsync = async () => {
+
         RNLocation.configure({
             distanceFilter: 1, // Meters
             desiredAccuracy: {
                 ios: "bestForNavigation",
-                android: "balancedPowerAccuracy"
+                android: "highAccuracy"
             },
             // Android only
             androidProvider: "auto",
@@ -75,7 +70,7 @@ class MyLocationMapMarker extends React.Component {
         RNLocation.requestPermission({
             ios: "whenInUse",
             android: {
-                detail: "coarse",
+                detail: "fine",
                 rationale: {
                     title: "Location permission",
                     message: "We use your location to demo the library",
@@ -86,52 +81,23 @@ class MyLocationMapMarker extends React.Component {
             if (granted) {
                 this.locationSubscription = RNLocation.subscribeToLocationUpdates(locations => {
                     if (locations != null) {
-                        const coor = {
-                            latitude: locations[0].latitude,
-                            longitude: locations[0].longitude
-                        }
-                        const uri = 'https://services.towy.com.co/api/UsuarioCliente/ObtenerTiendas?lat='
-                        +coor.latitude+'&lon='+coor.longitude+'&tipoServicio='+ this.props.navigation.getParam('itemId', 'NO-ID');
-                        let tiendas = []
-                        Axios.get(uri).then((r) => {
-                            
-                            tiendas = r.data.listResponse.map((item) => {
-                                const newV = {
-                                    id: item.idTienda,
-                                    nombre:item.nombre,
-                                    dir:item.direccion,
-                                    coordinate:{
-                                        latitude:item.latitud,
-                                        longitude:item.longitud
-                                    },
-                                    distance: this.getKilometros(coor.latitude,coor.longitude,
-                                        item.latitud, item.longitud),
-                                    desc:item.descripcion
-                                }
-                                return newV
-                            })
-                            this.setState({
-                                parqueaderos: tiendas.sort(function (a, b) {
-                                    if (a.distance > b.distance) {
-                                      return 1;
-                                    }
-                                    if (a.distance < b.distance) {
-                                      return -1;
-                                    }
-                                    // a must be equal to b
-                                    return 0;
-                                  })
-                            })
-                        }).catch((er) => {
-                            console.log(er)
-                        })
                         this.setState({
                             region: {
                                 latitude: locations[0].latitude,
                                 longitude: locations[0].longitude,
-                                latitudeDelta: 0.019,
-                                longitudeDelta: 0.019
-                            }
+                                latitudeDelta: 0.002,
+                                longitudeDelta: 0.003
+                            },
+                            GolfCars:this.state.GolfCars.map((car) => {
+                                var ncar = {
+                                    ...car,
+                                    coordinate:{
+                                        latitude: locations[0].latitude + ((0.0003 * car.id) *  Math.pow(-1,car.id)),
+                                        longitude: locations[0].longitude - ((0.0003 * car.id) *  Math.pow(-1,car.id))
+                                    }
+                                }
+                                return ncar
+                            })
                         })
                     }
                     else {
@@ -160,15 +126,9 @@ class MyLocationMapMarker extends React.Component {
             console.error('error')
         })
     }
-    setModalVisible=(bol, item)=>{
-       this.setState({
-           ...this.state,
-           itemSelected:item,
-           modalVisible:bol
-       })
-    }
 
     onViewableItemsChanged = (item) => {
+        console.log(item.coordinate)
         const duration = 1000
         if (this.markers[item.id]) {
             this.markers[item.id].showCallout();
@@ -177,111 +137,47 @@ class MyLocationMapMarker extends React.Component {
         const region = {
             latitude: item.coordinate.latitude,
             longitude: item.coordinate.longitude,
-            latitudeDelta: 0.002,
-            longitudeDelta: 0.002,
+            latitudeDelta: 0.0002,
+            longitudeDelta: 0.0002,
         };
         this.map.animateToRegion(region, duration)
         
-    }
-    openLink(lat,lon,opc){
-        var url = ''
-        if(opc ===2)
-        {
-             url = 'https://www.google.com/maps/dir/?api=1&origin='
-                                                + this.state.region.latitude + ', '
-                                                + this.state.region.longitude + '&destination='
-                                                + lat + ', '
-                                                + lon + '&travelmode=vehicle';
-        }
-        else
-        {
-             url = 'https://waze.com/ul?q=66%20Acacia%20Avenue&ll='
-                                +lat+','+lon+'&navigate=yes';
-        }
-        
-        Linking.openURL(url).catch((err) => console.error('An error occurred', err));
     }
 
     render() {
         const { navigation } = this.props;
         return (
             <View style={styles.container}>
-                <Modal
-                    //presentationStyle={'pageSheet'}
-                    animationType="slide"
-                    transparent={true}
-                    visible={this.state.modalVisible}>
-                    <View style={styles.modalcontainer}>
-                        <ImageBackground source={null} style={{ width: '100%', height: '100%' }} />
-                        <View style={{flexDirection:'row'}}>
-                            <View style={styles.columnleft}>
-                                <TouchableOpacity
-                                    style={[styles.backButton]}
-                                    onPress={() => { this.setState({
-                                        modalVisible:false
-                                    }) }}>
-                                   
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.columnright}>
-                                <Text style={{ fontSize: 20 }}>
-                                    {this.state.itemSelected.nombre}
-                                </Text>
-                                <Text style={{ fontSize: 15, opacity:0.5 }}>
-                                    {this.state.itemSelected.dir}
-                                </Text>
-                                <Text style={{ fontSize: 15, opacity:0.5 }}>
-                                    {this.state.itemSelected.desc}
-                                </Text>
-                                <View style={{flexDirection:'row'}}>
-                                    <TouchableOpacity
-                                        style={styles.buttons}
-                                        onPress={() => {
-                                            this.openLink(
-                                                this.state.itemSelected.coordinate.latitude,
-                                                this.state.itemSelected.coordinate.longitude,
-                                                1
-                                                )}}>
-                                        <Image style={{width:30,height:30}} source={null}/>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={styles.buttons}
-                                        onPress={() => {
-                                            this.openLink(
-                                                this.state.itemSelected.coordinate.latitude,
-                                                this.state.itemSelected.coordinate.longitude,
-                                                2
-                                                )}}>
-                                        <Image style={{width:30,height:30}}  source={null}/>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                    </View>           
-                </Modal>
-                <MapView // remove if not using Google Maps
+                <MapView
+                    provider={PROVIDER_GOOGLE} 
+                    mapType='satellite'
                     style={styles.map}
                     initialRegion={this.state.region}
                     showsUserLocation={true}
                     ref={(map) => { this.map = map }}
                     zoomEnabled={true}>
                     {
-                        this.state.parqueaderos.map((par) => {
+                        
+                        this.state.GolfCars.map((car) => {
                             return (
                                 <Marker
-                                    image={marker}
-                                    identifier={par.id.toString()}
-                                    ref={(ref) => this.markers[par.id] = ref}
-                                    key={par.id}
-                                    coordinate={par.coordinate}>
-
-                                    <Callout
+                                    image={marker2}
+                                    identifier={car.id.toString()}
+                                    ref={(ref) => this.markers[car.id] = ref}
+                                    key={car.id}
+                                    coordinate={car.coordinate}>
+                                        <Callout
                                         alphaHitTest
                                         tooltip
                                         style={styles.customView}
-                                        onPress={() => this.setModalVisible(true,par)}>
+                                        onPress={() => {}}>
 
-                                        
+                                        <CustomCallout>
+                                            <Text style={{ fontWeight: 'bold' }}>{car.nombre}</Text>
+                                            <Text style={{ fontSize: 10 }}>{car.nombre}</Text>
+                                            <Text style={{ fontSize: 10 }}>Click para mas info</Text>
+                                        </CustomCallout>
+
                                     </Callout>
                                 </Marker>)
                         })
@@ -290,7 +186,7 @@ class MyLocationMapMarker extends React.Component {
                 </MapView>
                 <FlatList
                     style={styles.list}
-                    data={this.state.parqueaderos}
+                    data={this.state.GolfCars}
                     ref={(ref) => this.listComercio = ref}
                     showsHorizontalScrollIndicator={false}
                     horizontal={false}
