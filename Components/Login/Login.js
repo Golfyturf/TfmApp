@@ -127,6 +127,7 @@ class LogIn extends Component {
       await AsyncStorage.setItem('user', user_data.user, ()=>this._retrieveData('user'));
       await AsyncStorage.setItem('idUser', user_data.idUser, ()=> this._retrieveData('idUser'));
     } catch (error) {
+      console.log("error")
       console.log(error)
     }
   };
@@ -156,6 +157,7 @@ class LogIn extends Component {
         
     })
     .catch((error) => {
+        console.log("error axios")
         console.log(error)
         var errorMessage = error.message;
         dispatch(saveError(errorMessage));
