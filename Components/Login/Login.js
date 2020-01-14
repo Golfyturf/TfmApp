@@ -131,6 +131,8 @@ class LogIn extends Component {
   };
 
   login = (navigation) =>{
+    navigation.navigate('HomeScreen');
+    /*
     
     var bodyFormData = new FormData();
     bodyFormData.append('user', this.state.email);
@@ -160,6 +162,7 @@ class LogIn extends Component {
         dispatch(saveError(errorMessage));
         dispatch(endLoading());
     })
+    */
   }
 
 

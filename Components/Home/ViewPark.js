@@ -8,6 +8,7 @@ import {
     Image
 } from 'react-native'
 
+import markerIcon from '../../assets/images/golfmark.png'
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
@@ -17,7 +18,7 @@ const CurrentLocationButton = function (props) {
         <TouchableOpacity style={styles.container}
         onPress={() => {props.animate(props.data)}}>
             <View style={styles.columnleft}>
-                <Image style={styles.iconImg} source={marker}/>
+                <Image style={styles.iconImg} source={markerIcon}/>
             </View>
             <View style={styles.columncenter}>
                 <Text style={{fontWeight:'bold'}}>{props.data.nombre}</Text>

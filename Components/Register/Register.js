@@ -8,8 +8,10 @@ import {
   Dimensions,
   TouchableOpacity,
   View,
+  ActionSheetIOS,
+   Picker
 } from 'react-native';
-import axios from 'axios'
+import Axios from 'axios'
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
@@ -18,27 +20,37 @@ class LogIn extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      Clubs:[],
       User: {
         Name: '',
         LastName: '',
         UserName: '',
         Password: '',
-        IdClub: ''
+        IdClub: '',
+        ClubName:'Seleccione el club al cual pertenece'
       }
     };
+    this.fetchData()
+  }
+  fetchData(){
+    Axios.get('https://golfyturf.com/tfmApp/AppWebServices/getClients.php').then(
+      (response) => {
+        this.setState({
+          Clubs:response.data
+        })
+      }
+    )
+
   }
 
   updateUserSignUpInfo = (event, type) => {
     let newUser = {
       ...this.state.User,
     };
-
     newUser[type] = event;
-
     this.setState({
       User: newUser
     });
-    console.log(this.state.User)
   };
   
   handlerRegister(navigation){
@@ -55,7 +67,7 @@ class LogIn extends Component {
       "Access-Control-Allow-Origin": "*",
     }
 
-    axios.post('https://golfyturf.com/tfmApp/AppWebServices/createUser.php',NewUser,headers).then((response) => {
+    Axios.post('https://golfyturf.com/tfmApp/AppWebServices/createUser.php',NewUser,headers).then((response) => {
       alert(response.data.message)
       if(response.data.validation)
       {
@@ -65,6 +77,49 @@ class LogIn extends Component {
     ).catch((error) => {
       console.error(error)
     })
+  }
+
+  showActionSheetClub = () => {
+    var BUTTONS = this.state.Clubs.map((item) => {
+      return item.Nombre_completo
+    });
+    
+    ActionSheetIOS.showActionSheetWithOptions({
+      options: BUTTONS,
+    },
+      (buttonIndex) => {
+        this.updateUserSignUpInfo(this.state.Clubs[buttonIndex].Nombre_completo, 'ClubName')
+        this.updateUserSignUpInfo(this.state.Clubs[buttonIndex].Id, 'IdClub')
+      });
+  };
+
+  belongsClub() {
+    let androidPicker = (
+      <View style={styles.pickerSelectionSection}>
+        <Picker
+          selectedValue={this.state.User.ClubName}
+          onValueChange={itemValue =>
+            this.updateUserSignUpInfo(itemValue, 'IdClub')
+          }>
+            <Picker.Item label="Seleccione el club al que pertenece" value="0" />
+          {this.state.Clubs.map((item) => {
+            return (
+              <Picker.Item label= {item.Nombre_completo} value={item.Id} />
+            )
+          })}
+        </Picker>
+      </View>
+    );
+
+    if (Platform.OS === 'ios') {
+
+      return (
+      <TouchableOpacity onPress={this.showActionSheetClub} style={styles.pickerSelectionSection}>
+        <Text style={{ color: 'black', fontSize: 15,}}>{this.state.User.ClubName}</Text>
+      </TouchableOpacity>)
+    } else {
+      return androidPicker;
+    }
   }
 
 
@@ -121,17 +176,7 @@ class LogIn extends Component {
             }
             maxLength={40}
           />
-           <TextInput
-            style={styles.userTextInput}
-            placeholder={'Club al que pertenece'}
-            placeholderTextColor="#454A4D"
-            underlineColorAndroid="transparent"
-            value={this.state.User.IdClub}
-            onChangeText={event =>
-              this.updateUserSignUpInfo(event, 'IdClub')
-            }
-            maxLength={40}
-          />
+           {this.belongsClub()}
           <TouchableOpacity 
             style={styles.RegisterButtom}
             onPress={() => this.handlerRegister(this.props.navigation)}>
@@ -161,8 +206,6 @@ const styles = StyleSheet.create({
   title:{
     color:'black',
     fontSize:50,
-    borderBottomWidth:2,
-    borderColor:'#027f01',
     alignSelf:'center'
   },
   userTextInput: {
@@ -176,6 +219,20 @@ const styles = StyleSheet.create({
     fontSize: 17,
     marginBottom: 30,
     alignSelf:'center'
+  },
+  pickerSelectionSection:{
+    borderRadius:10,
+    color: 'black',
+    height: 50,
+    borderWidth:2,
+    borderColor:'#027f01',
+    width: WIDTH - 40,
+    paddingLeft: 25,
+    fontSize: 17,
+    marginBottom: 30,
+    alignSelf:'center',
+    alignContent:'center',
+    justifyContent:'center'
   },
   RegisterButtom:{
     borderRadius:10,
