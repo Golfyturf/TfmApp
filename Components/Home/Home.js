@@ -11,6 +11,7 @@ import ViewPark from './ViewPark';
 import RNLocation from 'react-native-location';
 import markerIcon from '../../assets/images/golfmark.png';
 import marker2 from '../../assets/images/golfmark.png';
+import ModalQR from './ModalQR.js';
 import CustomCallout from './CustomCallout.js';
 import Axios from 'axios';
 const WIDTH = Dimensions.get('window').width;
@@ -23,15 +24,15 @@ class MyLocationMapMarker extends React.Component {
         this.mounted = false;
         this.state = {
             modalVisible: false,
-            itemSelected: { id: 1, nombre: 'SAFASASA', dir: 'calle 130', coordinate: { latitude: 4.705585, longitude: -74.081431 } },
+            itemSelected: {id: 1, nombre:'TXT23', seating : 5},
             region: null,
             GolfCars: [
-                {id: 1, nombre:'TXT23' },
-                {id: 2, nombre:'TXT33'},
-                {id: 3, nombre:'TXT33' },
-                {id: 4, nombre:'TXT23' },
-                {id: 5, nombre:'TXT23' },
-                {id: 6, nombre:'TXT23'},
+                {id: 1, nombre:'TXT23' , seating : 5},
+                {id: 2, nombre:'TXT33', seating : 2},
+                {id: 3, nombre:'TXT33', seating : 2 },
+                {id: 4, nombre:'TXT23' , seating : 3},
+                {id: 5, nombre:'TXT23' , seating : 2},
+                {id: 6, nombre:'TXT23', seating : 3},
 
             ],
             markerObjects: []
@@ -128,7 +129,6 @@ class MyLocationMapMarker extends React.Component {
     }
 
     onViewableItemsChanged = (item) => {
-        console.log(item.coordinate)
         const duration = 1000
         if (this.markers[item.id]) {
             this.markers[item.id].showCallout();
@@ -144,10 +144,23 @@ class MyLocationMapMarker extends React.Component {
         
     }
 
+    setModalVisible=(bol, item)=>{
+        this.setState({
+            ...this.state,
+            itemSelected:item,
+            modalVisible:bol
+        })
+     }
+
     render() {
         const { navigation } = this.props;
         return (
             <View style={styles.container}>
+                <ModalQR 
+                    modalVisible = {this.state.modalVisible} 
+                    itemSelected = {this.state.itemSelected}
+                    ModalManage = {(bol,item) => this.setModalVisible(bol,item)}
+                    navigation = {navigation}/>
                 <MapView
                     provider={PROVIDER_GOOGLE} 
                     mapType='satellite'
@@ -170,12 +183,11 @@ class MyLocationMapMarker extends React.Component {
                                         alphaHitTest
                                         tooltip
                                         style={styles.customView}
-                                        onPress={() => {}}>
+                                        onPress={() => {this.setModalVisible(true,car)}}>
 
                                         <CustomCallout>
                                             <Text style={{ fontWeight: 'bold' }}>{car.nombre}</Text>
-                                            <Text style={{ fontSize: 10 }}>{car.nombre}</Text>
-                                            <Text style={{ fontSize: 10 }}>Click para mas info</Text>
+                                            <Text style={{ fontSize: 10 }}>{'Numero de puestos: ' + car.seating}</Text>
                                         </CustomCallout>
 
                                     </Callout>

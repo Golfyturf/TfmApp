@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 
 const propTypes = {
   children: PropTypes.node.isRequired,
@@ -12,14 +12,19 @@ class CustomCallout extends React.Component {
   render() {
     return (
       <View style={[styles.container, this.props.style]}>
-        
+
         <View style={styles.bubble}>
           <View style={styles.amount}>
             {this.props.children}
-            </View>
+            <TouchableOpacity
+              style={styles.GoButton}
+              onPress={() => { props.ModalManage(false, props.itemSelected) }}>
+              <Text style={{color:'#6E7E80'}}>Iniciar</Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.arrowBorder} />
-        <View style={styles.arrow}/>
+        <View style={styles.arrow} />
       </View>
     );
   }
@@ -32,14 +37,24 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignSelf: 'flex-start',
   },
+  GoButton: {
+    backgroundColor: '#CFE1FF',
+    width:70,
+    marginTop:5,
+    borderRadius:10,
+    alignContent:'center',
+    alignItems:'center',
+    justifyContent:'center',
+    alignSelf:"center"
+  },
   bubble: {
-    width: 140,
+    width: 150,
     flexDirection: 'row',
     alignSelf: 'flex-start',
     backgroundColor: '#64E8A8',
     paddingHorizontal: 20,
     paddingVertical: 12,
-    borderRadius: 100,
+    borderRadius: 70,
     borderColor: '#007a87',
     borderWidth: 0.5,
   },
