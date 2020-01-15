@@ -3,6 +3,8 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 target 'tfmApp' do
   # Pods for tfmApp
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -39,6 +41,10 @@ target 'tfmApp' do
   pod 'Google-Maps-iOS-Utils'
   pod 'react-native-maps', :path => '../node_modules/react-native-maps'
 
+  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
+  pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"
+  
   target 'tfmAppTests' do
     inherit! :search_paths
     # Pods for testing

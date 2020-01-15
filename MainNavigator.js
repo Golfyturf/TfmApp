@@ -5,7 +5,7 @@ import {createStackNavigator} from 'react-navigation-stack';
 import Login from './Components/Login/Login';
 import Register from './Components/Register/Register';
 import Home from './Components/Home/Home'
-
+import PayMentInfo from './Components/PaymentInfo/Payment.js'
 const WIDTH = Dimensions.get('window').width;
 
 
@@ -28,6 +28,12 @@ const MainNavigator = createStackNavigator({
     screen:Home,
     navigationOptions: {
       header: null,
+    },
+  },
+  PayInfo:{
+    screen:PayMentInfo,
+    navigationOptions: {
+      header:null,
     },
   }
 });
