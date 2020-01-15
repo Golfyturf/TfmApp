@@ -19,7 +19,7 @@ class CustomCallout extends React.Component {
             <TouchableOpacity
               style={styles.GoButton}
               onPress={() => { props.ModalManage(false, props.itemSelected) }}>
-              <Text style={{color:'#6E7E80'}}>Iniciar</Text>
+              <Text style={{color:'#027f01'}}>Iniciar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   GoButton: {
-    backgroundColor: '#CFE1FF',
+    backgroundColor: 'white',
     width:70,
     marginTop:5,
     borderRadius:10,
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     width: 150,
     flexDirection: 'row',
     alignSelf: 'flex-start',
-    backgroundColor: '#64E8A8',
+    backgroundColor: '#027f01',
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 70,
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderWidth: 16,
     borderColor: 'transparent',
-    borderTopColor: '#4da2ab',
+    borderTopColor: '#027f01',
     alignSelf: 'center',
     marginTop: -32,
   },
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderWidth: 16,
     borderColor: 'transparent',
-    borderTopColor: '#007a87',
+    borderTopColor: '#027f01',
     alignSelf: 'center'
   },
 });

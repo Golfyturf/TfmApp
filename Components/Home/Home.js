@@ -163,7 +163,7 @@ class MyLocationMapMarker extends React.Component {
                     navigation = {navigation}/>
                 <MapView
                     provider={PROVIDER_GOOGLE} 
-                    mapType='satellite'
+                    mapType='hybrid'
                     style={styles.map}
                     initialRegion={this.state.region}
                     showsUserLocation={true}
@@ -186,8 +186,8 @@ class MyLocationMapMarker extends React.Component {
                                         onPress={() => {this.setModalVisible(true,car)}}>
 
                                         <CustomCallout>
-                                            <Text style={{ fontWeight: 'bold' }}>{car.nombre}</Text>
-                                            <Text style={{ fontSize: 10 }}>{'Numero de puestos: ' + car.seating}</Text>
+                                            <Text style={{ fontWeight: 'bold', color:'white' }}>{car.nombre}</Text>
+                                            <Text style={{ fontSize: 10, color:'white' }}>{'Numero de puestos: ' + car.seating}</Text>
                                         </CustomCallout>
 
                                     </Callout>
