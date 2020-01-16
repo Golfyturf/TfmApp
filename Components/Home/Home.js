@@ -49,17 +49,6 @@ class MyLocationMapMarker extends React.Component {
         this._getLocationAsync();
     }
 
-    componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
-      }
-    
-      componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
-      }
-    
-      onBackPress = () => {
-        return true; 
-      }
 
     _getLocationAsync = async () => {
 
