@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import AsyncStorage from '@react-native-community/async-storage';
+import {AsyncStorage} from 'react-native';
 import {
     StyleSheet,
     ScrollView,
@@ -29,7 +29,20 @@ class LogIn extends Component {
       email: '',
       password: '',
     };
+    this._retrieveData(props.navigation)
   }
+
+  _retrieveData = async (navigation) => {
+
+    try {
+      const value = await AsyncStorage.getItem('user');
+      if (value !== null) {
+        navigation.navigate('HomeScreen')
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
 
   updateUserSignUpInfo = (event, type) => {
     var updatedUserSignUpInfo = {
@@ -110,30 +123,17 @@ class LogIn extends Component {
     );
   }
 
-  _retrieveData = async (key) => {
-    try {
-      const value = await AsyncStorage.getItem(key);
-      if (value !== null) {
-        console.log(value);
-      }
-    } catch (error) {
-      console.log("error getr")
-      console.log(error)
-    }
-  };
-
   _storeData = async (user_data) => {
     try {
-      await AsyncStorage.setItem('user', user_data.user, ()=>this._retrieveData('user'));
-      await AsyncStorage.setItem('idUser', user_data.idUser, ()=> this._retrieveData('idUser'));
+      await AsyncStorage.setItem('user', user_data.user);
+      await AsyncStorage.setItem('nameUser', user_data.name);
+      await AsyncStorage.setItem('idUser', user_data.idUser);
     } catch (error) {
       console.log(error)
     }
   };
 
   login = (navigation) =>{
-    navigation.navigate('HomeScreen');
-    /*
     
     var bodyFormData = new FormData();
     bodyFormData.append('user', this.state.email);
@@ -149,9 +149,9 @@ class LogIn extends Component {
         headers)
     .then(response =>{
         var user_data = response.data;
-        this._storeData(user_data);
         if(user_data.validation === true)
         {
+          this._storeData(user_data);
           navigation.navigate('HomeScreen');
         }
 
@@ -163,7 +163,7 @@ class LogIn extends Component {
         dispatch(saveError(errorMessage));
         dispatch(endLoading());
     })
-    */
+  
   }
 
 

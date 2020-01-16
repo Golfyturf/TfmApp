@@ -4,7 +4,8 @@ import {
     View,
     Dimensions,
     FlatList,
-    Text
+    Text,
+    BackHandler
 } from 'react-native';
 import React from 'react';
 import ViewPark from './ViewPark';
@@ -13,6 +14,8 @@ import markerIcon from '../../assets/images/golfmark.png';
 import marker2 from '../../assets/images/golfmark.png';
 import ModalQR from './ModalQR.js';
 import CustomCallout from './CustomCallout.js';
+import LogOut from './LogOutButton.js';
+import {AsyncStorage} from 'react-native';
 import Axios from 'axios';
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
@@ -45,6 +48,18 @@ class MyLocationMapMarker extends React.Component {
         };
         this._getLocationAsync();
     }
+
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+      }
+    
+      componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+      }
+    
+      onBackPress = () => {
+        return true; 
+      }
 
     _getLocationAsync = async () => {
 
@@ -127,6 +142,7 @@ class MyLocationMapMarker extends React.Component {
             console.error('error')
         })
     }
+   
 
     onViewableItemsChanged = (item) => {
         const duration = 1000
@@ -142,6 +158,10 @@ class MyLocationMapMarker extends React.Component {
         };
         this.map.animateToRegion(region, duration)
         
+    }
+    LogOut = async (navigation) =>{
+        navigation.navigate('Home')
+        await AsyncStorage.clear();
     }
 
     setModalVisible=(bol, item)=>{
@@ -194,8 +214,9 @@ class MyLocationMapMarker extends React.Component {
                                 </Marker>)
                         })
                     }
-
+                    
                 </MapView>
+                <LogOut logOutMethod = {this.LogOut.bind()} nav = {navigation}/>
                 <FlatList
                     style={styles.list}
                     data={this.state.GolfCars}
