@@ -9,9 +9,11 @@ import {
   TouchableOpacity,
   View,
   ActionSheetIOS,
-   Picker
+   Picker,
+   Image
 } from 'react-native';
 import Axios from 'axios'
+import ball from '../../assets/images/golfBall3.png';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
@@ -125,67 +127,75 @@ class LogIn extends Component {
 
   render() {
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
         <ScrollView
-            contentContainerStyle={{flexGrow: 1, padding: 30}}>  
+            contentContainerStyle={{flexGrow: 1}}>  
+          <View style={styles.logoContainer}>
+              <Image
+                source={ball}
+                style={styles.backgroundContainer}
+              />
+          </View>
           <View style={styles.wrapperView}>
             <Text style={styles.title}>Registro</Text>
           </View>
-          <TextInput
-            style={styles.userTextInput}
-            placeholder={'Nombre'}
-            placeholderTextColor="#454A4D"
-            underlineColorAndroid="transparent"
-            value={this.state.User.Name}
-            onChangeText={event =>
-              this.updateUserSignUpInfo(event, 'Name')
-            }
-            maxLength={40}
-          />
-           <TextInput
-            style={styles.userTextInput}
-            placeholder={'Apellido'}
-            placeholderTextColor="#454A4D"
-            underlineColorAndroid="transparent"
-            value={this.state.User.LastName}
-            onChangeText={event =>
-              this.updateUserSignUpInfo(event, 'LastName')
-            }
-            maxLength={40}
-          />
-           <TextInput
-            style={styles.userTextInput}
-            placeholder={'Nombre de usuario'}
-            placeholderTextColor="#454A4D"
-            underlineColorAndroid="transparent"
-            value={this.state.User.UserName}
-            onChangeText={event =>
-              this.updateUserSignUpInfo(event, 'UserName')
-            }
-            maxLength={40}
-          />
-           <TextInput
-            style={styles.userTextInput}
-            placeholder={'Contraseña'}
-            placeholderTextColor="#454A4D"
-            secureTextEntry={true}
-            underlineColorAndroid="transparent"
-            value={this.state.User.Password}
-            onChangeText={event =>
-              this.updateUserSignUpInfo(event, 'Password')
-            }
-            maxLength={40}
-          />
-           {this.belongsClub()}
-          <TouchableOpacity 
-            style={styles.RegisterButtom}
-            onPress={() => this.handlerRegister(this.props.navigation)}>
-            <Text style={{color:'white'}}>
-              Registrar
-            </Text>
-          </TouchableOpacity>
+          <View style={styles.inputsContainer}>
+            <TextInput
+              style={styles.userTextInput}
+              placeholder={'Nombre'}
+              placeholderTextColor="#454A4D"
+              underlineColorAndroid="transparent"
+              value={this.state.User.Name}
+              onChangeText={event =>
+                this.updateUserSignUpInfo(event, 'Name')
+              }
+              maxLength={40}
+            />
+            <TextInput
+              style={styles.userTextInput}
+              placeholder={'Apellido'}
+              placeholderTextColor="#454A4D"
+              underlineColorAndroid="transparent"
+              value={this.state.User.LastName}
+              onChangeText={event =>
+                this.updateUserSignUpInfo(event, 'LastName')
+              }
+              maxLength={40}
+            />
+            <TextInput
+              style={styles.userTextInput}
+              placeholder={'Nombre de usuario'}
+              placeholderTextColor="#454A4D"
+              underlineColorAndroid="transparent"
+              value={this.state.User.UserName}
+              onChangeText={event =>
+                this.updateUserSignUpInfo(event, 'UserName')
+              }
+              maxLength={40}
+            />
+            <TextInput
+              style={styles.userTextInput}
+              placeholder={'Contraseña'}
+              placeholderTextColor="#454A4D"
+              secureTextEntry={true}
+              underlineColorAndroid="transparent"
+              value={this.state.User.Password}
+              onChangeText={event =>
+                this.updateUserSignUpInfo(event, 'Password')
+              }
+              maxLength={40}
+            />
+            {this.belongsClub()}
+            <TouchableOpacity 
+              style={styles.RegisterButtom}
+              onPress={() => this.handlerRegister(this.props.navigation)}>
+              <Text style={{color:'white'}}>
+                Registrar
+              </Text>
+            </TouchableOpacity>
+          </View>
           </ScrollView>
-        </SafeAreaView>
+        </View>
     );
   }
 }
@@ -197,6 +207,25 @@ const styles = StyleSheet.create({
     height:HEIGHT,
     justifyContent:'center'
   },
+  inputsContainer: {
+    height: HEIGHT * 0.8,
+    marginBottom: HEIGHT * 0.3
+  },
+  backgroundContainer:{
+    width: WIDTH * 0.9,
+    height: '100%',
+    borderBottomLeftRadius: 400,
+    borderBottomRightRadius: 400,
+    opacity: 0.5
+  },
+  logoContainer: {
+    backgroundColor: '#FFFFFF',
+    height: HEIGHT * 0.2,
+    width: WIDTH,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: WIDTH * 0
+  }, 
   wrapperView:{
     borderBottomColor:'#027f01',
     borderBottomWidth:2,
