@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "34544395457",
+    "firebase_url": "https://tfmapp-265113.firebaseio.com",
+    "project_id": "tfmapp-265113",
+    "storage_bucket": "tfmapp-265113.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34544395457:android:086268ec3f1adcf5a5a040",
+        "android_client_info": {
+          "package_name": "com.tfmapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "34544395457-3s0oflksd7iu3rpiim6rnlfe455hk5o7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tfmapp",
+            "certificate_hash": "a231128da8a665f5c96d47a957225854d023ec0e"
+          }
+        },
+        {
+          "client_id": "34544395457-g3dhbfcnol1k0f8jcviiq6lgeohab6sm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDX1CLVm6_zPzc7PL7dJPTNbbK9AQ2YdXk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "34544395457-g3dhbfcnol1k0f8jcviiq6lgeohab6sm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "34544395457-uosu8n8l30f5juvmguvs1ugeal3non9k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "tfmApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
