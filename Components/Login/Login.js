@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {AsyncStorage} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {
     StyleSheet,
     ScrollView,
@@ -59,9 +59,9 @@ class LogIn extends Component {
     }
 
     Axios.post('https://golfyturf.com/tfmApp/AppWebServices/createUser.php',NewUser,headers).then((response) => {
-      console.log(response.data);
       if(response.data.userAlreadyRegistered === true)
       {
+          this._storeData(userInfo.user)
           navigation.navigate('HomeScreen')
       }
       else
@@ -95,9 +95,18 @@ class LogIn extends Component {
     }
   };
 
+  _storeData = async (user_data) => {
+    try {
+      await AsyncStorage.setItem('user', user_data.email);
+      await AsyncStorage.setItem('nameUser', user_data.givenName);
+    } catch (error) {
+      console.log("error store data")
+      console.log(error)
+    }
+  };
+
  
   _retrieveData = async (navigation) => {
-
     try {
       const value = await AsyncStorage.getItem('user');
       if (value !== null) {
@@ -105,6 +114,7 @@ class LogIn extends Component {
       }
     } catch (error) {
       // Error retrieving data
+      console.log(error)
     }
   };
 
@@ -149,16 +159,7 @@ class LogIn extends Component {
     );
   }
 
-  _storeData = async (user_data) => {
-    try {
-      await AsyncStorage.setItem('user', user_data.user);
-      await AsyncStorage.setItem('nameUser', user_data.name);
-      await AsyncStorage.setItem('idUser', user_data.idUser);
-    } catch (error) {
-      console.log("error")
-      console.log(error)
-    }
-  };
+  
 
   login = (navigation) =>{
     var bodyFormData = new FormData();

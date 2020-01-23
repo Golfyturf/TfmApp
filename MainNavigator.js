@@ -20,7 +20,7 @@ const DrawerConfig = {
 
 const DrawerNavigator = createDrawerNavigator(
   {
-    Home: {
+    Hometex: {
       screen: Home,
       navigationOptions: {
         disableGestures: true,
