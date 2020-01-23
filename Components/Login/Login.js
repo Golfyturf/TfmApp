@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import logo from '../../assets/images/logo_gyt.png';
 import ball from '../../assets/images/golfBall3.png';
+import Axios from 'axios';
+
 import {
   GoogleSignin,
   GoogleSigninButton,
@@ -23,6 +25,8 @@ import firebase from '../../Instances/FireBase.js'
 
 const {width: WIDTH} = Dimensions.get('window');
 const {height: HEIGHT} = Dimensions.get('window');
+const sizeH = HEIGHT / 100;
+const sizeW = WIDTH / 100; 
 
 class LogIn extends Component {
   constructor(props) {
@@ -38,12 +42,43 @@ class LogIn extends Component {
     this._retrieveData(props.navigation)
   }
 
-  signIn = async () => {
+  signIn = async (navigation) => {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       this.setState({ userInfo });
-      console.log(userInfo)
+      var NewUser  = new FormData();
+      NewUser.append('name',userInfo.user.givenName);
+      NewUser.append('lastName',userInfo.user.familyName);
+      NewUser.append('user',userInfo.user.email);
+      NewUser.append('photo',userInfo.user.photo); 
+
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+      "Access-Control-Allow-Origin": "*",
+    }
+
+    Axios.post('https://golfyturf.com/tfmApp/AppWebServices/createUser.php',NewUser,headers).then((response) => {
+      console.log(response.data);
+      if(response.data.userAlreadyRegistered === true)
+      {
+          navigation.navigate('HomeScreen')
+      }
+      else
+      {
+        if(response.data.validation == true)
+        {
+
+        }
+        else
+        {
+
+        }
+      }
+      }).catch((error) => {
+        console.log(error)
+      })
+
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
@@ -103,56 +138,12 @@ class LogIn extends Component {
                   style={styles.logo}
                 />
               </View>
-              <View style={styles.inputContainer}>
-                  <TextInput
-                    style={styles.userTextInput}
-                    placeholder={'Correo'}
-                    placeholderTextColor="#454A4D"
-                    underlineColorAndroid="transparent"
-                    value={this.state.email}
-                    onChangeText={event =>
-                      this.updateUserSignUpInfo(event, 'email')
-                    }
-                    maxLength={40}
-                  />
-                  
-                  <TextInput
-                    style={styles.userTextInput}
-                    placeholder={'Contraseña'}
-                    secureTextEntry={true}
-                    placeholderTextColor="#454A4D"
-                    underlineColorAndroid="transparent"
-                    value={this.state.password}
-                    onChangeText={event =>
-                      this.updateUserSignUpInfo(event, 'password')
-                    }
-                    maxLength={40}
-                  />
-                <TouchableOpacity style={styles.loginButton}
-                  onPress={() => this.login(this.props.navigation)}>
-                  <Text style={styles.loginTextButton}>
-                    Iniciar Sesión
-                  </Text>
-                </TouchableOpacity>
-                <GoogleSigninButton
-                    style={{ width: 192, height: 60 }}
+              <GoogleSigninButton
+                    style={styles.GoogleButton}
                     size={GoogleSigninButton.Size.Wide}
                     color={GoogleSigninButton.Color.Dark}
-                    onPress={this.signIn}
+                    onPress={() => this.signIn(this.props.navigation)}
                     disabled={this.state.isSigninInProgress} />
-                <TouchableOpacity
-                  onPress={() =>{}}>
-                  <Text style={styles.forgetPss}>
-                    ¿Has olvidado tu contraseña?
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {this.props.navigation.navigate('Register')}}>
-                  <Text style={styles.registrateBtn}>
-                    ¿No tienes cuenta? Regístrate
-                  </Text>
-                </TouchableOpacity>
-              </View>
           </ScrollView>
       </View>  
     );
@@ -195,9 +186,6 @@ class LogIn extends Component {
     .catch((error) => {
         console.log("error axios")
         console.log(error)
-        var errorMessage = error.message;
-        dispatch(saveError(errorMessage));
-        dispatch(endLoading());
     })
   
   }
@@ -227,92 +215,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: WIDTH * 0
   }, 
   logo: {
-    marginTop: 20,
+    marginTop: sizeH * 5,
     width: '55%',
     height: '50%',
-    alignSelf: 'center',
-    padding: 0,
+    alignSelf: 'center'
   },
   scrollView: {
     backgroundColor: '#FFFFFF',
   },
-  errorMessage: {
-    fontSize: 20,
-    color: 'red',
-    textAlign: 'center',
-  },
-  Icon: {
-    padding: 10,
-  },
-  LockIcon: {
-    paddingRight: 15,
-    paddingLeft: 15,
-    paddingTop: 10,
-  },
-  userTextInput: {
-    height: 45,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    width: WIDTH*0.8,
-    borderRadius: 10,
-    borderWidth: 2,
-    marginBottom: 10,
-    color: 'black',
-    borderColor: '#027f01',
-    paddingLeft: 10,
-    fontSize: 17,
-  },
-  textImg: {
-    width: 350,
-    height: 120,
-  },
-  text: {
-    color: '#000000',
-    fontSize: 40,
-    marginTop: 5,
-    fontFamily: 'Roboto',
-  },
-  body: {
-    backgroundColor: '#FFFDE7',
-    alignItems: 'center',
-  },
-  inputContainer: {
-    marginTop: 10,
-    alignSelf: 'center',
-    alignItems: 'center',
-    marginBottom: HEIGHT * 0.3
-  },
-  forgetPss: {
-    textAlign: 'center',
-    fontSize: 15,
-    color: '#454A4D',
-    marginTop: 10,
-  },
-  loginButton: {
-    shadowColor: '#000',
-    shadowOffset: {width: 1, height: 2},
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 3,
-    width: WIDTH*0.8,
-    height: 50,
-    borderRadius: 10,
-    backgroundColor: '#027f01',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10, 
-    marginBottom: 20,
-  },
-  loginTextButton: {
-    fontSize: 17,
-    color: '#ffffff',
-  },
-  registrateBtn: {
-    textAlign: 'center',
-    fontSize: 15,
-    color: '#454A4D',
-    marginTop: 30,
-  },
+  GoogleButton:{
+    width: sizeW * 80, 
+    height: sizeH * 5,
+    alignSelf:'center',
+    marginTop:sizeH * 8,
+    borderRadius: 20
+  }
 });
 
 export default LogIn;

@@ -4,11 +4,32 @@ import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import Login from './Components/Login/Login';
 import Register from './Components/Register/Register';
-import Home from './Components/Home/Home'
-import PayMentInfo from './Components/PaymentInfo/Payment.js'
+import Home from './Components/Home/Home';
+import LateralMenu from './Components/LateralMenu/LateralMenu.js';
+import PayMentInfo from './Components/PaymentInfo/Payment.js';
+import { createDrawerNavigator } from 'react-navigation-drawer';
+
 const WIDTH = Dimensions.get('window').width;
 
+const DrawerConfig = {
+  drawerWidth: WIDTH * 0.83,
+  contentComponent: ({ navigation }) => {
+    return <LateralMenu />;
+  },
+};
 
+const DrawerNavigator = createDrawerNavigator(
+  {
+    Home: {
+      screen: Home,
+      navigationOptions: {
+        disableGestures: true,
+        header: null,
+      },
+    }
+  },
+  DrawerConfig,
+);
 
 
 const MainNavigator = createStackNavigator({
@@ -25,7 +46,7 @@ const MainNavigator = createStackNavigator({
     },
   },
   HomeScreen:{
-    screen:Home,
+    screen:DrawerNavigator,
     navigationOptions: {
       header: null,
       gesturesEnabled: false,
