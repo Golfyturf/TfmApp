@@ -1,4 +1,4 @@
-import MapView, { PROVIDER_GOOGLE, Marker, AnimatedRegion, Callout } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
+import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import {
     StyleSheet,
     View,
@@ -47,6 +47,19 @@ class MyLocationMapMarker extends React.Component {
             }))
         };
         this._getLocationAsync();
+    }
+
+    componentWillMount() {
+        BackHandler.addEventListener('hardwareBackPress', function () {
+          return true;
+        });
+    }
+    
+    _removeEventListener(){
+        console.log('se removio')
+        BackHandler.removeEventListener('hardwareBackPress', function () {
+            return true;
+        });
     }
 
 
@@ -159,18 +172,50 @@ class MyLocationMapMarker extends React.Component {
             itemSelected:item,
             modalVisible:bol
         })
-     }
+    }
+
+    getMarkers(){
+        if(this.state.region !== null)
+        {
+            return(
+                this.state.GolfCars.map((car) => {
+                    return (
+                        <Marker
+                            image={marker2}
+                            identifier={car.id.toString()}
+                            ref={(ref) => this.markers[car.id] = ref}
+                            key={car.id}
+                            coordinate={car.coordinate}>
+                                <Callout
+                                alphaHitTest
+                                tooltip
+                                style={styles.customView}
+                                onPress={() => {this.setModalVisible(true,car)}}>
+
+                                <CustomCallout>
+                                    <Text style={{ fontWeight: 'bold', color:'white' }}>{car.nombre}</Text>
+                                    <Text style={{ fontSize: 10, color:'white' }}>{'Numero de puestos: ' + car.seating}</Text>
+                                </CustomCallout>
+
+                            </Callout>
+                        </Marker>)
+                })
+            )
+        }
+    }
 
     render() {
         const { navigation } = this.props;
         return (
-            <View style={styles.container}>
+            <View style={[styles.container,{paddingTop: 1}]}>
                 <ModalQR 
                     modalVisible = {this.state.modalVisible} 
                     itemSelected = {this.state.itemSelected}
+                    Remove = {this._removeEventListener}
                     ModalManage = {(bol,item) => this.setModalVisible(bol,item)}
                     navigation = {navigation}/>
                 <MapView
+                showsMyLocationButton={true}
                     provider={PROVIDER_GOOGLE} 
                     mapType='hybrid'
                     style={styles.map}
@@ -178,31 +223,7 @@ class MyLocationMapMarker extends React.Component {
                     showsUserLocation={true}
                     ref={(map) => { this.map = map }}
                     zoomEnabled={true}>
-                    {
-                        
-                        this.state.GolfCars.map((car) => {
-                            return (
-                                <Marker
-                                    image={marker2}
-                                    identifier={car.id.toString()}
-                                    ref={(ref) => this.markers[car.id] = ref}
-                                    key={car.id}
-                                    coordinate={car.coordinate}>
-                                        <Callout
-                                        alphaHitTest
-                                        tooltip
-                                        style={styles.customView}
-                                        onPress={() => {this.setModalVisible(true,car)}}>
-
-                                        <CustomCallout>
-                                            <Text style={{ fontWeight: 'bold', color:'white' }}>{car.nombre}</Text>
-                                            <Text style={{ fontSize: 10, color:'white' }}>{'Numero de puestos: ' + car.seating}</Text>
-                                        </CustomCallout>
-
-                                    </Callout>
-                                </Marker>)
-                        })
-                    }
+                    {this.getMarkers()}
                     
                 </MapView>
                 <LogOut logOutMethod = {this.LogOut.bind()} nav = {navigation}/>
@@ -291,7 +312,7 @@ const styles = StyleSheet.create({
     list: {
         flex: 1,
         paddingTop: 15,
-        backgroundColor: '#E6E5DF',
+        backgroundColor: '#027f01',
         alignSelf: 'center',
         marginBottom: WIDTH / 20
     },

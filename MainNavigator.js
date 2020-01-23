@@ -15,7 +15,7 @@ const MainNavigator = createStackNavigator({
   Home: {
     screen: Login,
     navigationOptions: {
-      header: null,
+      header: null
     },
   },
   Register: {
@@ -28,13 +28,11 @@ const MainNavigator = createStackNavigator({
     screen:Home,
     navigationOptions: {
       header: null,
+      gesturesEnabled: false,
     },
   },
   PayInfo:{
-    screen:PayMentInfo,
-    navigationOptions: {
-      header:null,
-    },
+    screen:PayMentInfo
   }
 });
 

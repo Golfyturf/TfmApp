@@ -98,15 +98,16 @@ class LogIn extends Component {
   belongsClub() {
     let androidPicker = (
       <View style={styles.pickerSelectionSection}>
-        <Picker
-          selectedValue={this.state.User.ClubName}
+        <Picker 
+          itemStyle={styles.itemStyle}
+          selectedValue={this.state.User.IdClub}
           onValueChange={itemValue =>
             this.updateUserSignUpInfo(itemValue, 'IdClub')
           }>
             <Picker.Item label="Seleccione el club al que pertenece" value="0" />
           {this.state.Clubs.map((item) => {
             return (
-              <Picker.Item label= {item.Nombre_completo} value={item.Id} />
+              <Picker.Item label= {item.Nombre_completo} value={item.Id}  key={item.Id}/>
             )
           })}
         </Picker>
@@ -114,7 +115,7 @@ class LogIn extends Component {
     );
 
     if (Platform.OS === 'ios') {
-
+      
       return (
       <TouchableOpacity onPress={this.showActionSheetClub} style={styles.pickerSelectionSection}>
         <Text style={{ color: 'black', fontSize: 15,}}>{this.state.User.ClubName}</Text>
@@ -164,7 +165,7 @@ class LogIn extends Component {
             />
             <TextInput
               style={styles.userTextInput}
-              placeholder={'Nombre de usuario'}
+              placeholder={'Correo electronico'}
               placeholderTextColor="#454A4D"
               underlineColorAndroid="transparent"
               value={this.state.User.UserName}
@@ -226,6 +227,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: WIDTH * 0
   }, 
+  itemStyle:{
+    backgroundColor:'#027f01',
+    borderWidth:2,
+    borderColor:'#027f01'
+  },
   wrapperView:{
     borderBottomColor:'#027f01',
     borderBottomWidth:2,

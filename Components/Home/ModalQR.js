@@ -5,8 +5,7 @@ import {
     TouchableOpacity,
     StyleSheet,
     Dimensions,
-    Text,
-    Image
+    Text
 } from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner';
 const WIDTH = Dimensions.get('window').width;
@@ -18,6 +17,7 @@ const ModalQR = function (props) {
         alert(e.data)
         props.ModalManage(false,props.itemSelected)
         props.navigation.navigate('PayInfo')
+        props.Remove()
       }
 
     return (
@@ -38,11 +38,18 @@ const ModalQR = function (props) {
                         </Text>
                         }
                         bottomContent={
+                            <>
                             <TouchableOpacity
                                     style={styles.backButton}
                                     onPress={() => {props.ModalManage(false,props.itemSelected)}}>
                                     <Text style={{color:'white'}}>Cancelar</Text>
                             </TouchableOpacity>
+                             <TouchableOpacity
+                             style={styles.backButton}
+                             onPress={(e) => onSuccess(e)}> 
+                             <Text style={{color:'white'}}>moverse</Text>
+                            </TouchableOpacity>
+                            </>
                         }
                     />
 

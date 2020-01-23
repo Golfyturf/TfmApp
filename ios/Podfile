@@ -40,11 +40,14 @@ target 'tfmApp' do
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
   pod 'react-native-maps', :path => '../node_modules/react-native-maps'
-
+  pod 'GoogleSignIn', '~> 5.0.2'
+  
   pod 'react-native-camera', :path => '../node_modules/react-native-camera'
   pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
   pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"
+  pod 'Firebase/Analytics'
   
+
   target 'tfmAppTests' do
     inherit! :search_paths
     # Pods for testing

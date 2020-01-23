@@ -6,18 +6,20 @@ import {
     ScrollView,
     View,
     Text,
-    StatusBar,
-    SafeAreaView,
     TextInput,
     Image,
     Dimensions,
     TouchableOpacity,
-    ImageBackground,
-    Alert,
-    ActivityIndicator,
 } from 'react-native';
 import logo from '../../assets/images/logo_gyt.png';
 import ball from '../../assets/images/golfBall3.png';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-community/google-signin';
+
+import firebase from '../../Instances/FireBase.js'
 
 const {width: WIDTH} = Dimensions.get('window');
 const {height: HEIGHT} = Dimensions.get('window');
@@ -28,10 +30,37 @@ class LogIn extends Component {
     this.state = {
       email: '',
       password: '',
+      isSigninInProgress: false  
     };
+    GoogleSignin.configure({
+      scopes: ['https://www.googleapis.com/auth/userinfo.profile']
+    });
     this._retrieveData(props.navigation)
   }
 
+  signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      this.setState({ userInfo });
+      console.log(userInfo)
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+        console.log('1')
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+        console.log('2')
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+        console.log('3')
+      } else {
+        console.log(error)
+      }
+    }
+  };
+
+ 
   _retrieveData = async (navigation) => {
 
     try {
@@ -105,6 +134,12 @@ class LogIn extends Component {
                     Iniciar Sesión
                   </Text>
                 </TouchableOpacity>
+                <GoogleSigninButton
+                    style={{ width: 192, height: 60 }}
+                    size={GoogleSigninButton.Size.Wide}
+                    color={GoogleSigninButton.Color.Dark}
+                    onPress={this.signIn}
+                    disabled={this.state.isSigninInProgress} />
                 <TouchableOpacity
                   onPress={() =>{}}>
                   <Text style={styles.forgetPss}>
@@ -135,7 +170,6 @@ class LogIn extends Component {
   };
 
   login = (navigation) =>{
-    
     var bodyFormData = new FormData();
     bodyFormData.append('user', this.state.email);
     bodyFormData.append('password', this.state.password);    
@@ -246,6 +280,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignSelf: 'center',
     alignItems: 'center',
+    marginBottom: HEIGHT * 0.3
   },
   forgetPss: {
     textAlign: 'center',
