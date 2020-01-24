@@ -5,6 +5,7 @@ import {createStackNavigator} from 'react-navigation-stack';
 import Login from './Components/Login/Login';
 import Register from './Components/Register/Register';
 import AddCreditCard from './Components/AddCreditCard/AddCreditCard';
+import CreditCardList from './Components/CreditCardList/CreditCardList';
 import Home from './Components/Home/Home';
 import LateralMenu from './Components/LateralMenu/LateralMenu.js';
 import PayMentInfo from './Components/PaymentInfo/Payment.js';
@@ -58,6 +59,9 @@ const MainNavigator = createStackNavigator({
   },
   AddCreditCard: {
     screen: AddCreditCard
+  },
+  CreditCardList: {
+    screen: CreditCardList
   }
 });
 

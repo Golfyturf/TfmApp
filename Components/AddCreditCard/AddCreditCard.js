@@ -1,21 +1,13 @@
 import React, {Component} from 'react';
-import axios from 'axios';
-import {AsyncStorage, KeyboardAvoidingView} from 'react-native';
 import {
     StyleSheet,
     ScrollView,
     View,
     Text,
-    TextInput,
-    Image,
     Dimensions,
     TouchableOpacity,
     BackHandler
 } from 'react-native';
-import logo from '../../assets/images/logo_gyt.png';
-import ball from '../../assets/images/golfBall3.png';
-import field from '../../assets/images/golf-field-png.png';
-import Axios from 'axios';
 import { CreditCardInput } from "react-native-credit-card-input";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 
@@ -26,7 +18,7 @@ const {height: HEIGHT} = Dimensions.get('window');
 const sizeH = HEIGHT / 100;
 const sizeW = WIDTH / 100; 
 
-class LogIn extends Component {
+class AddCreditCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -48,7 +40,7 @@ class LogIn extends Component {
           <ScrollView
             contentContainerStyle={{flexGrow: 1,}}
             style={styles.scrollView}>
-            <Text style={styles.tittle}>Añadir medio de pago</Text>
+            <Text style={styles.tittle}>Añadir método de pago</Text>
             <View style={styles.cardContainer}>
                 <CreditCardInput  labels={{ number: "Numero", expiry: "Fecha", cvc: "CVC/CCV" }} allowScroll={true} onChange={this._onChange} />
             </View>
@@ -64,7 +56,13 @@ class LogIn extends Component {
     );
   }
 
-  _onChange = form => console.log(form);
+  _onChange = form => {
+      this.setState({
+          ...form.values
+      })
+      console.log(this.state);
+  };
+    
 
 }
 
@@ -93,4 +91,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default LogIn;
+export default AddCreditCard;
