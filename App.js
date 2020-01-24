@@ -6,7 +6,7 @@
  * @flow
  */
 
-import React from 'react';
+import React, {Fragment} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -21,9 +21,9 @@ import Login from './Components/Login/Login';
 import MainNavigator from './MainNavigator';
 const App: () => React$Node = () => {
   return (
-    <>
-      <MainNavigator/>
-    </>
+      <Fragment>  
+        <MainNavigator />
+      </Fragment>
   );
 };
 

@@ -5,7 +5,8 @@ import {
     Dimensions,
     FlatList,
     Text,
-    BackHandler
+    BackHandler,
+    SafeAreaView
 } from 'react-native';
 import React from 'react';
 import RNLocation from 'react-native-location';
@@ -57,7 +58,6 @@ class MyLocationMapMarker extends React.Component {
     }
     
     _removeEventListener(){
-        console.log('se removio')
         BackHandler.removeEventListener('hardwareBackPress', function () {
             return true;
         });
@@ -213,7 +213,8 @@ class MyLocationMapMarker extends React.Component {
     render() {
         const { navigation } = this.props;
         return (
-            <View style={[styles.container,{paddingTop: 1}]}>
+            <View style={styles.container}>
+                <SafeAreaView style={{flex : 0, backgroundColor : 'rgba(2,127,1,0.8)'}} /> 
                 <ModalQR 
                     modalVisible = {this.state.modalVisible} 
                     itemSelected = {this.state.itemSelected}
@@ -221,7 +222,6 @@ class MyLocationMapMarker extends React.Component {
                     ModalManage = {(bol,item) => this.setModalVisible(bol,item)}
                     navigation = {navigation}/>
                 <MapView
-                showsMyLocationButton={true}
                     provider={PROVIDER_GOOGLE} 
                     mapType='hybrid'
                     style={styles.map}
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end'
     },
     map: {
-        flex: 2
+        flex:1
     },
     buttons:{
         flex:1,
