@@ -63,7 +63,7 @@ class LogIn extends Component {
       if(response.data.userAlreadyRegistered === true)
       {
           this._storeData(userInfo.user)
-          navigation.navigate('HomeScreen')
+          navigation.navigate('AddCreditCard')
       }
       else
       {
@@ -111,7 +111,7 @@ class LogIn extends Component {
     try {
       const value = await AsyncStorage.getItem('user');
       if (value !== null) {
-        navigation.navigate('HomeScreen')
+        navigation.navigate('AddCreditCard')
       }
     } catch (error) {
       // Error retrieving data
@@ -162,38 +162,6 @@ class LogIn extends Component {
           </ScrollView>
       </View>  
     );
-  }
-
-  
-
-  login = (navigation) =>{
-    var bodyFormData = new FormData();
-    bodyFormData.append('user', this.state.email);
-    bodyFormData.append('password', this.state.password);    
-
-    const headers = {
-        'Content-Type': 'multipart/form-data',
-        "Access-Control-Allow-Origin": "*",
-    }
-
-    axios.post("https://golfyturf.com/tfmApp/AppWebServices/checkLogin.php",
-        bodyFormData,
-        headers)
-    .then(response =>{
-        var user_data = response.data;
-        if(user_data.validation === true)
-        {
-          this._storeData(user_data);
-          navigation.navigate('AddCreditCard');
-        }
-
-        
-    })
-    .catch((error) => {
-        console.log("error axios")
-        console.log(error)
-    })
-  
   }
 
 

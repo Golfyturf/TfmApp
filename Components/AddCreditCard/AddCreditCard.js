@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {AsyncStorage} from 'react-native';
+import {AsyncStorage, KeyboardAvoidingView} from 'react-native';
 import {
     StyleSheet,
     ScrollView,
@@ -10,11 +10,14 @@ import {
     Image,
     Dimensions,
     TouchableOpacity,
+    BackHandler
 } from 'react-native';
 import logo from '../../assets/images/logo_gyt.png';
 import ball from '../../assets/images/golfBall3.png';
 import field from '../../assets/images/golf-field-png.png';
 import Axios from 'axios';
+import { CreditCardInput } from "react-native-credit-card-input";
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 
 
 
@@ -33,31 +36,59 @@ class LogIn extends Component {
     };
   }
 
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', function () {
+        return false;
+    });
+  }
+
   render() {
     return (    
-      <View style={styles.loginContainer}>
+      
           <ScrollView
-            contentContainerStyle={{flexGrow: 1}}
+            contentContainerStyle={{flexGrow: 1,}}
             style={styles.scrollView}>
-
-                <View style={styles.cardContainer}>
-
-
-                </View>
-
+            <Text style={styles.tittle}>Añadir medio de pago</Text>
+            <View style={styles.cardContainer}>
+                <CreditCardInput  labels={{ number: "Numero", expiry: "Fecha", cvc: "CVC/CCV" }} allowScroll={true} onChange={this._onChange} />
+            </View>
+            <TouchableOpacity 
+                style={styles.addCardButton}
+                onPress={() => console.log("p")}>
+                <Text style={{fontSize: 20,color:'white'}}>
+                    Guardar
+                </Text>
+            </TouchableOpacity>
           </ScrollView>
-      </View>  
+      
     );
   }
+
+  _onChange = form => console.log(form);
 
 }
 
 
 const styles = StyleSheet.create({
+    tittle:{ 
+        fontSize: 30, 
+        fontWeight: 'bold', 
+        color: 'black', 
+        alignSelf: 'center',
+        marginTop: HEIGHT * 0.02
+    },
     cardContainer: {
-        backgroundColor: "black",
-        width: WIDTH * 0.9,
-        height: HEIGHT * 0.3
+        marginTop: HEIGHT * 0.1
+    },
+    addCardButton:{
+        backgroundColor:'#027f01',
+        width: WIDTH,
+        height: 50,
+        alignSelf:'center',
+        justifyContent:'center',
+        alignItems:'center',
+        position: "absolute",
+        bottom: 60
     }
 
 });

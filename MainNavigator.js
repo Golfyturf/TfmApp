@@ -57,10 +57,7 @@ const MainNavigator = createStackNavigator({
     screen:PayMentInfo
   },
   AddCreditCard: {
-    screen: AddCreditCard,
-    navigationOptions: {
-      header: null,
-    },
+    screen: AddCreditCard
   }
 });
 
