@@ -19,7 +19,7 @@ class CustomCallout extends React.Component {
             <TouchableOpacity
               style={styles.GoButton}
               onPress={() => { props.ModalManage(false, props.itemSelected) }}>
-              <Text style={{color:'#027f01'}}>Iniciar</Text>
+              <Text style={{color:'#027f01'}}>Llevame!</Text>
             </TouchableOpacity>
           </View>
         </View>

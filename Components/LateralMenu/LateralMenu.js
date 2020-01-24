@@ -6,13 +6,12 @@ import {
   View,
   SafeAreaView,
   Dimensions,
-  Image
+  Image,
+  TouchableOpacity
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import logOut from '../../assets/images/logout.png';
-import creditCard from '../../assets/images/creditCards.png';
-
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import creditCards from '../../assets/images/creditCards.png';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
@@ -27,7 +26,7 @@ class MenuDrawer extends Component {
       user: {
         user:'',
         nameUser:'Holaaaaaa',
-        photo: ''
+        photo: 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png'
       }
     };
     this.getUserInfo()
@@ -92,13 +91,12 @@ logOutMethod = async () =>{
           </TouchableOpacity>
           <TouchableOpacity 
             style = {styles.opcion}
-            onPress={() => {this.props.navigation.navigate('AddCreditCard')}}>
-            
+            onPress = {() => this.props.navigation.navigate('AddCreditCard')}>
             <Image
-                  source={creditCard}
+                  source={creditCards}
                   style={styles.iconOpcion}
                 />
-            <Text style={styles.opcionText}>Mis Tarjetas de credito</Text>
+            <Text style={styles.opcionText}>Mis tarjetas</Text>
           </TouchableOpacity>
           
           <TouchableOpacity 
@@ -148,10 +146,10 @@ const styles = StyleSheet.create({
   },
   opcion:{
     flexDirection:'row',
-    height:sizeH * 5,
+    height:sizeH * 4,
     marginVertical: sizeH * 1,
     alignItems:'center',
-    padding:sizeW * 3
+    padding:sizeW * 2
   },
   opcionText:{
     fontSize:sizeW * 4,

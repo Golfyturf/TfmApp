@@ -23,11 +23,6 @@ class MyLocationMapMarker extends React.Component {
         };
     }
 
-    componentWillMount() {
-        BackHandler.addEventListener('hardwareBackPress', function () {
-            return false;
-        });
-    }
 
 
     render() {

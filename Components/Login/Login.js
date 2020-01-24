@@ -38,7 +38,7 @@ class LogIn extends Component {
       isSigninInProgress: false  
     };
     GoogleSignin.configure({
-      scopes: ['https://www.googleapis.com/auth/userinfo.profile']
+      scopes: ['https://www.googleapis.com/auth/userinfo.profile','https://www.googleapis.com/auth/classroom.profile.photos']
     });
     this._retrieveData(props.navigation)
   }
@@ -63,7 +63,7 @@ class LogIn extends Component {
       if(response.data.userAlreadyRegistered === true)
       {
           this._storeData(userInfo.user)
-          navigation.navigate('AddCreditCard')
+          navigation.navigate('HomeScreen')
       }
       else
       {
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
   },
   GoogleButton:{
     width: sizeW * 80, 
-    height: sizeH * 5,
+    height: sizeH * 7,
     alignSelf:'center',
     marginTop:sizeH * 12,
     borderRadius: 20,

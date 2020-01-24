@@ -3,10 +3,10 @@ import {
     StyleSheet,
     View,
     Dimensions,
-    FlatList,
+    Linking,
     Text,
-    BackHandler,
-    SafeAreaView
+    SafeAreaView,
+    Image
 } from 'react-native';
 import React from 'react';
 import RNLocation from 'react-native-location';
@@ -26,8 +26,10 @@ class MyLocationMapMarker extends React.Component {
         super(props);
         this.markers = []
         this.mounted = false;
+        
         this.state = {
             modalVisible: false,
+            statusBarHeight: 0,
             itemSelected: {id: 1, nombre:'TXT23', seating : 5},
             region: null,
             GolfCars: [
@@ -49,10 +51,12 @@ class MyLocationMapMarker extends React.Component {
         };
         this._getLocationAsync();
     }
-
+    
+    UNSAFE_componentWillMount() {
+        setTimeout(()=>this.setState({statusBarHeight: 1}),500);
+    }
 
     _getLocationAsync = async () => {
-
         RNLocation.configure({
             distanceFilter: 1, // Meters
             desiredAccuracy: {
@@ -84,9 +88,15 @@ class MyLocationMapMarker extends React.Component {
                 }
             }
         }).then(granted => {
+
             if (granted) {
+
+        
                 this.locationSubscription = RNLocation.subscribeToLocationUpdates(locations => {
-                    if (locations != null) {
+                    if (locations !== null) {
+
+
+                this.locationSubscription();
                         this.setState({
                             region: {
                                 latitude: locations[0].latitude,
@@ -132,7 +142,6 @@ class MyLocationMapMarker extends React.Component {
             console.error('error')
         })
     }
-   
 
     onViewableItemsChanged = (item) => {
         const duration = 1000
@@ -174,22 +183,20 @@ class MyLocationMapMarker extends React.Component {
                 this.state.GolfCars.map((car) => {
                     return (
                         <Marker
-                            image={marker2}
                             identifier={car.id.toString()}
                             ref={(ref) => this.markers[car.id] = ref}
                             key={car.id}
                             coordinate={car.coordinate}>
+                                <Image source={marker2} style = {styles.markerImg}/>
                                 <Callout
                                 alphaHitTest
                                 tooltip
                                 style={styles.customView}
-                                onPress={() => {this.setModalVisible(true,car)}}>
-
+                                onPress={() => {this.openLink(car.coordinate.latitude,car.coordinate.longitude,2)}}>
                                 <CustomCallout>
                                     <Text style={{ fontWeight: 'bold', color:'white' }}>{car.nombre}</Text>
                                     <Text style={{ fontSize: 10, color:'white' }}>{'Numero de puestos: ' + car.seating}</Text>
                                 </CustomCallout>
-
                             </Callout>
                         </Marker>)
                 })
@@ -197,18 +204,33 @@ class MyLocationMapMarker extends React.Component {
         }
     }
 
+    openLink(lat,lon,opc){
+        var url = ''
+        if(opc ===2)
+        {
+             url = 'https://www.google.com/maps/dir/?api=1&origin='
+                                                + this.state.region.latitude + ', '
+                                                + this.state.region.longitude + '&destination='
+                                                + lat + ', '
+                                                + lon + '&travelmode=walking';
+        }
+        else
+        {
+             url = 'https://waze.com/ul?q=66%20Acacia%20Avenue&ll='
+                                +lat+','+lon+'&navigate=yes';
+        }
+        
+        Linking.openURL(url).catch((err) => console.error('An error occurred', err));
+    }
+
     render() {
         const { navigation } = this.props;
         return (
-            <View style={styles.container}>
-                <SafeAreaView style={{flex : 0, backgroundColor : 'rgba(2,127,1,0.8)'}} /> 
-                <ModalQR 
-                    modalVisible = {this.state.modalVisible} 
-                    itemSelected = {this.state.itemSelected}
-                    Remove = {this._removeEventListener}
-                    ModalManage = {(bol,item) => this.setModalVisible(bol,item)}
-                    navigation = {navigation}/>
+            <View style={[styles.container, {paddingTop: this.state.statusBarHeight}]}>
+                <SafeAreaView style={{flex : 0, backgroundColor : 'rgba(2,127,1,0.8)'}} />
                 <MapView
+                    mapPadding= {{ top: 0, right: 0, bottom: 0, left: 0 }}
+                    showsMyLocationButton= {true}
                     provider={PROVIDER_GOOGLE} 
                     mapType='hybrid'
                     style={styles.map}
@@ -217,8 +239,13 @@ class MyLocationMapMarker extends React.Component {
                     ref={(map) => { this.map = map }}
                     zoomEnabled={true}>
                     {this.getMarkers()}
-                    
                 </MapView>
+                <ModalQR 
+                    modalVisible = {this.state.modalVisible} 
+                    itemSelected = {this.state.itemSelected}
+                    Remove = {this._removeEventListener}
+                    ModalManage = {(bol,item) => this.setModalVisible(bol,item)}
+                    navigation = {navigation}/>
             </View>
         );
     }
@@ -230,7 +257,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end'
     },
     map: {
-        flex:1
+        flex:11
     },
     buttons:{
         flex:1,
@@ -238,6 +265,10 @@ const styles = StyleSheet.create({
         alignContent:'center',
         alignItems:'center',
         justifyContent:'center'
+    },
+    markerImg:{
+        width:sizeW * 10,
+        height:sizeW * 10
     },
     columnleft:{
         flex:0.2,
