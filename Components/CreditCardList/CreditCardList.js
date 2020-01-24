@@ -34,20 +34,22 @@ class CreditCardList extends Component {
       return (    
         
         <View style={styles.creditCardListContainer}>
-            <ScrollView
+            <View
               contentContainerStyle={{flexGrow: 1,}}
               style={styles.scrollView}>
               <Text style={styles.tittle}>Métodos de pago</Text>
               <FlatList 
+                    keyExtractor={(item, index) => index.toString()}
                     data={[
                       {number: '411111******1111'},
                       {number: '511111******1111'},
                       {number: '21111******1111'},
                       {number: '422222******1111'}
                     ]}
-                    renderItem={({item}) => <CreditCardListItem key={item.number} number={item.number} />}
+                    renderItem={({item, index}) => <CreditCardListItem number={item.number} 
+                    />}
               />
-            </ScrollView>
+            </View>
             <TouchableOpacity 
                 style={styles.addCardButton}
                 onPress={() => this.props.navigation.navigate('AddCreditCard')}>

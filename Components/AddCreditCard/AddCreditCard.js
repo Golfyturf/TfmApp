@@ -28,11 +28,6 @@ class AddCreditCard extends Component {
     };
   }
 
-  componentWillMount() {
-    BackHandler.addEventListener('hardwareBackPress', function () {
-        return false;
-    });
-  }
 
   render() {
     return (    

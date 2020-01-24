@@ -91,7 +91,7 @@ logOutMethod = async () =>{
           </TouchableOpacity>
           <TouchableOpacity 
             style = {styles.opcion}
-            onPress = {() => this.props.navigation.navigate('AddCreditCard')}>
+            onPress = {() => this.props.navigation.navigate('CreditCardList')}>
             <Image
                   source={creditCards}
                   style={styles.iconOpcion}
