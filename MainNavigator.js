@@ -12,7 +12,7 @@ import { createDrawerNavigator } from 'react-navigation-drawer';
 const WIDTH = Dimensions.get('window').width;
 
 const DrawerConfig = {
-  drawerWidth: WIDTH * 0.83,
+  drawerWidth: WIDTH * 0.8,
   contentComponent: ({ navigation }) => {
     return <LateralMenu />;
   },

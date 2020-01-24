@@ -13,7 +13,6 @@ import RNLocation from 'react-native-location';
 import marker2 from '../../assets/images/golfmark.png';
 import ModalQR from './ModalQR.js';
 import CustomCallout from './CustomCallout.js';
-import LogOut from './LogOutButton.js';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const {width: WIDTH} = Dimensions.get('window');
@@ -49,18 +48,6 @@ class MyLocationMapMarker extends React.Component {
             }))
         };
         this._getLocationAsync();
-    }
-
-    UNSAFE_componentWillMount() {
-        BackHandler.addEventListener('hardwareBackPress', function () {
-          return true;
-        });
-    }
-    
-    _removeEventListener(){
-        BackHandler.removeEventListener('hardwareBackPress', function () {
-            return true;
-        });
     }
 
 
@@ -232,7 +219,6 @@ class MyLocationMapMarker extends React.Component {
                     {this.getMarkers()}
                     
                 </MapView>
-                <LogOut logOutMethod = {this.LogOut.bind()} nav = {navigation}/>
             </View>
         );
     }

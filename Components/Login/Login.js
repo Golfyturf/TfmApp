@@ -99,6 +99,7 @@ class LogIn extends Component {
     try {
       await AsyncStorage.setItem('user', user_data.email);
       await AsyncStorage.setItem('nameUser', user_data.givenName);
+      await AsyncStorage.setItem('photo', user_data.photo);
     } catch (error) {
       console.log("error store data")
       console.log(error)
@@ -158,40 +159,6 @@ class LogIn extends Component {
       </View>  
     );
   }
-
-  
-
-  login = (navigation) =>{
-    var bodyFormData = new FormData();
-    bodyFormData.append('user', this.state.email);
-    bodyFormData.append('password', this.state.password);    
-
-    const headers = {
-        'Content-Type': 'multipart/form-data',
-        "Access-Control-Allow-Origin": "*",
-    }
-
-    axios.post("https://golfyturf.com/tfmApp/AppWebServices/checkLogin.php",
-        bodyFormData,
-        headers)
-    .then(response =>{
-        var user_data = response.data;
-        if(user_data.validation === true)
-        {
-          this._storeData(user_data);
-          navigation.navigate('HomeScreen');
-        }
-
-        
-    })
-    .catch((error) => {
-        console.log("error axios")
-        console.log(error)
-    })
-  
-  }
-
-
 }
 
 
