@@ -46,6 +46,14 @@ const ModalQR = function (props) {
                     <Text style={styles.textConfirm}>Scan</Text>
             </>
             </TouchableHighlight>
+            <TouchableHighlight
+            style={styles.menuButton}
+            onPress={() => {props.navigation.toggleDrawer()}}>
+                <Image
+                        source={MenuIcon}
+                        style={styles.MenuIcon}
+                    />
+            </TouchableHighlight>
             <Modal
                 presentationStyle={'pageSheet'}
                 animationType='fade'
@@ -106,19 +114,19 @@ const styles = StyleSheet.create({
         height:sizeW * 4
     },
     menuButton:{
-      flex: 1,
-      height: '40%',
+      flex: 2,
+      height: '50%',
       backgroundColor: 'white',
       alignItems:'center',
       justifyContent:'center',
       margin:sizeW * 2,
       marginBottom: sizeH * 3,
-      borderRadius:WIDTH    
+      borderRadius:HEIGHT    
     },
     btnAcept: {
       flex: 10,
       flexDirection:'row',  
-      height: sizeH * 6,
+      height: sizeH * 4,
       backgroundColor: 'rgba(2,127,1,1)',
       alignItems:'center',
       justifyContent:'center',

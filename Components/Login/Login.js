@@ -100,6 +100,7 @@ class LogIn extends Component {
     try {
       await AsyncStorage.setItem('user', user_data.email);
       await AsyncStorage.setItem('nameUser', user_data.givenName);
+      await AsyncStorage.setItem('photo', user_data.photo);
     } catch (error) {
       console.log("error store data")
       console.log(error)
@@ -163,8 +164,6 @@ class LogIn extends Component {
       </View>  
     );
   }
-
-
 }
 
 
