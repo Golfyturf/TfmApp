@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import logOut from '../../assets/images/logout.png';
+import creditCard from '../../assets/images/creditCards.png';
+
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const WIDTH = Dimensions.get('window').width;
@@ -88,12 +90,15 @@ logOutMethod = async () =>{
                 />
             <Text style={styles.opcionText}>Cerrar Sesion</Text>
           </TouchableOpacity>
-          <TouchableOpacity style = {styles.opcion}>
+          <TouchableOpacity 
+            style = {styles.opcion}
+            onPress={() => {this.props.navigation.navigate('AddCreditCard')}}>
+            
             <Image
-                  source={logOut}
+                  source={creditCard}
                   style={styles.iconOpcion}
                 />
-            <Text style={styles.opcionText}>Cerrar Sesion</Text>
+            <Text style={styles.opcionText}>Mis Tarjetas de credito</Text>
           </TouchableOpacity>
           
           <TouchableOpacity 
