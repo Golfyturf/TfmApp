@@ -48,6 +48,8 @@ target 'tfmApp' do
   pod 'Firebase/Analytics'
   
 
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+
   target 'tfmAppTests' do
     inherit! :search_paths
     # Pods for testing

@@ -4,8 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
-  Platform,
+  SafeAreaView,
   Dimensions,
 } from 'react-native';
 
@@ -19,7 +18,13 @@ class MenuDrawer extends Component {
   render() {
     return (
       <View style={styles.container}>
-        
+        <SafeAreaView style={{flex : 0, backgroundColor : 'rgba(2,127,1,0.8)'}} /> 
+        <View style = {styles.header}>
+            <Text style={styles.name}></Text>
+        </View>
+        <View style = {styles.body}>
+
+        </View>
       </View>
     );
   }
@@ -30,6 +35,14 @@ const styles = StyleSheet.create({
     flexDirection:'column',
     position: 'relative',
     height: '100%'
+  },
+  header:{
+    flex:1,
+    backgroundColor:'blue'
+  },
+  body:{
+    flex:3,
+    backgroundColor:'red'
   }
 });
 

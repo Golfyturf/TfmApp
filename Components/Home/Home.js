@@ -5,20 +5,22 @@ import {
     Dimensions,
     FlatList,
     Text,
-    BackHandler
+    BackHandler,
+    SafeAreaView
 } from 'react-native';
 import React from 'react';
-import ViewPark from './ViewPark';
 import RNLocation from 'react-native-location';
-import markerIcon from '../../assets/images/golfmark.png';
 import marker2 from '../../assets/images/golfmark.png';
 import ModalQR from './ModalQR.js';
 import CustomCallout from './CustomCallout.js';
 import LogOut from './LogOutButton.js';
-import {AsyncStorage} from 'react-native';
-import Axios from 'axios';
-const WIDTH = Dimensions.get('window').width;
-const HEIGHT = Dimensions.get('window').height;
+import AsyncStorage from '@react-native-community/async-storage';
+
+const {width: WIDTH} = Dimensions.get('window');
+const {height: HEIGHT} = Dimensions.get('window');
+const sizeH = HEIGHT / 100;
+const sizeW = WIDTH / 100; 
+
 class MyLocationMapMarker extends React.Component {
 
     constructor(props) {
@@ -49,14 +51,13 @@ class MyLocationMapMarker extends React.Component {
         this._getLocationAsync();
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         BackHandler.addEventListener('hardwareBackPress', function () {
           return true;
         });
     }
     
     _removeEventListener(){
-        console.log('se removio')
         BackHandler.removeEventListener('hardwareBackPress', function () {
             return true;
         });
@@ -162,8 +163,13 @@ class MyLocationMapMarker extends React.Component {
         
     }
     LogOut = async (navigation) =>{
-        navigation.navigate('Home')
-        await AsyncStorage.clear();
+        try {
+                navigation.navigate('Home')
+                await AsyncStorage.clear();
+          } catch (error) {
+            console.log("error clear store data")
+            console.log(error)
+        }
     }
 
     setModalVisible=(bol, item)=>{
@@ -207,7 +213,8 @@ class MyLocationMapMarker extends React.Component {
     render() {
         const { navigation } = this.props;
         return (
-            <View style={[styles.container,{paddingTop: 1}]}>
+            <View style={styles.container}>
+                <SafeAreaView style={{flex : 0, backgroundColor : 'rgba(2,127,1,0.8)'}} /> 
                 <ModalQR 
                     modalVisible = {this.state.modalVisible} 
                     itemSelected = {this.state.itemSelected}
@@ -215,7 +222,6 @@ class MyLocationMapMarker extends React.Component {
                     ModalManage = {(bol,item) => this.setModalVisible(bol,item)}
                     navigation = {navigation}/>
                 <MapView
-                showsMyLocationButton={true}
                     provider={PROVIDER_GOOGLE} 
                     mapType='hybrid'
                     style={styles.map}
@@ -227,24 +233,6 @@ class MyLocationMapMarker extends React.Component {
                     
                 </MapView>
                 <LogOut logOutMethod = {this.LogOut.bind()} nav = {navigation}/>
-                <FlatList
-                    style={styles.list}
-                    data={this.state.GolfCars}
-                    ref={(ref) => this.listComercio = ref}
-                    showsHorizontalScrollIndicator={false}
-                    horizontal={false}
-                    scrollEnabled={true}
-                    numColumns={1}
-                    keyExtractor={item => { return item.id; }}
-                    onScrollToIndexFailed={() => { console.log('error') }}
-                    showsVerticalScrollIndicator={false}
-                    renderItem={({ item }) => {
-                        return (
-                            <ViewPark data={item} animate={this.onViewableItemsChanged}>
-
-                            </ViewPark>
-                        )
-                    }} />
             </View>
         );
     }
@@ -256,7 +244,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end'
     },
     map: {
-        flex: 2
+        flex:1
     },
     buttons:{
         flex:1,
