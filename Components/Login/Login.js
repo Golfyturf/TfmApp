@@ -63,7 +63,7 @@ class LogIn extends Component {
       if(response.data.userAlreadyRegistered === true)
       {
           this._storeData(userInfo.user)
-          navigation.navigate('AddCreditCard')
+          navigation.navigate('HomeScreen')
       }
       else
       {
@@ -111,7 +111,7 @@ class LogIn extends Component {
     try {
       const value = await AsyncStorage.getItem('user');
       if (value !== null) {
-        navigation.navigate('AddCreditCard')
+        navigation.navigate('HomeScreen')
       }
     } catch (error) {
       // Error retrieving data
