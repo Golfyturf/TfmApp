@@ -521,7 +521,7 @@ SPEC CHECKSUMS:
   GTMAppAuth: 4deac854479704f348309e7b66189e604cf5e01e
   GTMSessionFetcher: cea130bbfe5a7edc8d06d3f0d17288c32ffe9925
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
-  Permission-Camera: 8fe4753b02396489b11c5089e4f57bab7fe1ef42
+  Permission-Camera: b0fec577b27488314a885f9c74433e02f3585b9b
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   RCTRequired: b153add4da6e7dbc44aebf93f3cf4fcae392ddf1
   RCTTypeSafety: 9aa1b91d7f9310fc6eadc3cf95126ffe818af320
@@ -532,9 +532,9 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-camera: 1ba3e7f2375a6b44ae09ce9be70268e0b225bc10
+  react-native-camera: d5b131588a2d1f0ad377a321793f58794dbdc768
   react-native-google-maps: 2e2e697dab576abd5809d78cd74e775865b62bf7
-  react-native-location: 5a40ec1cc6abf2f6d94df979f98ec76c3a415681
+  react-native-location: 9c53c0957756f7d70e8fdc76b1c7ed85867c8d0b
   react-native-maps: 6e499eee4eabf422ba8b6f94e993cc768bf35153
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
@@ -546,10 +546,10 @@ SPEC CHECKSUMS:
   React-RCTText: 9ccc88273e9a3aacff5094d2175a605efa854dbe
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
-  RNCAsyncStorage: 44395cb9c7c1523104c2b499eb426ef7aff82bca
+  RNCAsyncStorage: 8539fc80a0075fcc9c8e2dff84cd22dc5bf1dacf
   RNGestureHandler: 02905abe54e1f6e59c081a10b4bd689721e17aa6
   RNGoogleSignin: a00f87261ea13df9a5cea8deafa6927d6f2c3562
-  RNPermissions: 2f74237e97b08beda01e914301e12524ddddf5b8
+  RNPermissions: 6db7e0a4d94c9c02390d11020b1d3d187aaf77e5
   RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 

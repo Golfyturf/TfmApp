@@ -4,6 +4,7 @@ import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import Login from './Components/Login/Login';
 import Register from './Components/Register/Register';
+import AddCreditCard from './Components/AddCreditCard/AddCreditCard';
 import Home from './Components/Home/Home';
 import LateralMenu from './Components/LateralMenu/LateralMenu.js';
 import PayMentInfo from './Components/PaymentInfo/Payment.js';
@@ -54,6 +55,9 @@ const MainNavigator = createStackNavigator({
   },
   PayInfo:{
     screen:PayMentInfo
+  },
+  AddCreditCard: {
+    screen: AddCreditCard
   }
 });
 

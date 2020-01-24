@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import logo from '../../assets/images/logo_gyt.png';
 import ball from '../../assets/images/golfBall3.png';
+import field from '../../assets/images/golf-field-png.png';
 import Axios from 'axios';
 
 import {
@@ -62,7 +63,7 @@ class LogIn extends Component {
       if(response.data.userAlreadyRegistered === true)
       {
           this._storeData(userInfo.user)
-          navigation.navigate('HomeScreen')
+          navigation.navigate('AddCreditCard')
       }
       else
       {
@@ -111,7 +112,7 @@ class LogIn extends Component {
     try {
       const value = await AsyncStorage.getItem('user');
       if (value !== null) {
-        navigation.navigate('HomeScreen')
+        navigation.navigate('AddCreditCard')
       }
     } catch (error) {
       // Error retrieving data
@@ -152,9 +153,13 @@ class LogIn extends Component {
               <GoogleSigninButton
                     style={styles.GoogleButton}
                     size={GoogleSigninButton.Size.Wide}
-                    color={GoogleSigninButton.Color.Dark}
+                    color={GoogleSigninButton.Color.Light}
                     onPress={() => this.signIn(this.props.navigation)}
                     disabled={this.state.isSigninInProgress} />
+              <Image
+                source={field}
+                style={styles.backgroundBottom}
+              />
           </ScrollView>
       </View>  
     );
@@ -167,6 +172,11 @@ const styles = StyleSheet.create({
     width: WIDTH,
     height: HEIGHT,
   },
+  backgroundBottom:{
+    position: "absolute",
+    bottom: 0,
+    height: HEIGHT * 0.3
+  },
   backgroundContainer:{
     width: WIDTH * 0.9,
     height: '45%',
@@ -175,7 +185,6 @@ const styles = StyleSheet.create({
     opacity: 0.5
   },
   logoContainer: {
-    backgroundColor: '#FFFFFF',
     height: HEIGHT * 0.5,
     width: WIDTH,
     alignItems: 'center',
@@ -189,14 +198,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   scrollView: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#e2e2e2',
   },
   GoogleButton:{
     width: sizeW * 80, 
     height: sizeH * 5,
     alignSelf:'center',
-    marginTop:sizeH * 8,
-    borderRadius: 20
+    marginTop:sizeH * 12,
+    borderRadius: 20,
+    zIndex: 4
   }
 });
 
