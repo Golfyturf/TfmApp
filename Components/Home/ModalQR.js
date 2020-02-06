@@ -20,62 +20,77 @@ const sizeW = WIDTH / 100;
 
 const ModalQR = function (props) {
     onSuccess = (e) => {
-        props.ModalManage(false, props.itemSelected)
-        props.navigation.navigate('PayInfo')
+        props.createService(e,props.itemSelected )
+    }
+
+    other = () => {
+        props.createService("a",props.itemSelected )
     }
 
     return (
         <View style={styles.bottomBar}>
-            
             <TouchableHighlight
-            style={styles.menuButton}
-            onPress={() => {props.navigation.toggleDrawer()}}>
-                <Image
-                        source={MenuIcon}
-                        style={styles.MenuIcon}
-                    />
+                style={styles.menuButton}
+                onPress={() => {props.navigation.toggleDrawer()}}>
+                    <Image
+                            source={MenuIcon}
+                            style={styles.MenuIcon}
+                        />
             </TouchableHighlight>
             <TouchableHighlight
-            style={styles.btnAcept}
-            onPress={() => { props.ModalManage(true, props.itemSelected)}}>
-            <>
-                    <Image
-                        source={QRicon}
-                        style={styles.backgroundContainer}
-                    />
-                    <Text style={styles.textConfirm}>Scan</Text>
-            </>
+                style={styles.btnAcept}
+                onPress={() => { props.ModalManage(true, props.itemSelected)}}>
+                <>
+                        <Image
+                            source={QRicon}
+                            style={styles.backgroundContainer}
+                        />
+                        <Text style={styles.textConfirm}>Scan</Text>
+                </>
             </TouchableHighlight>
             <Modal
-                presentationStyle={'pageSheet'}
-                animationType='fade'
+                presentationStyle={"overFullScreen"}
+                animationType="slide"
                 transparent={false}
                 visible={props.modalVisible}>
                 <QRCodeScanner
-                    topViewStyle={styles.topView}
+                    customMarker={
+                        <View style={styles.MarkerQRContainer}>
+                            <View style={styles.QRTop}>
+
+                            </View>
+                            <View style={styles.QRCenter}>
+                                <View style = {styles.QRLeft}>
+
+                                </View>
+                                <View style = {styles.MarkerQR}>
+
+                                </View>
+                                <View style = {styles.QRRight}>
+
+                                </View>
+                            </View>
+                            <View style={styles.QRBottom}>
+                            </View>
+                        </View>
+                    }
+                    showMarker={true}
                     containerStyle={styles.containerStyle}
                     cameraStyle={styles.cameraStyle}
                     onRead={(e) => onSuccess(e)}
-                    topContent={
-                        <Text style={styles.title}>
-                            {'Dirigete al vehiculo y escanea el codigo ' + '\n' + 'para continuar'}
-                        </Text>
-                    }
-                    bottomContent={
-                        <>
-                            <TouchableOpacity
-                                style={styles.backButton}
-                                onPress={() => { props.ModalManage(false, props.itemSelected) }}>
-                                <Text style={{ color: 'white' }}>Cancelar</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.backButton}
-                                onPress={(e) => onSuccess(e)}>
-                                <Text style={{ color: 'white' }}>moverse</Text>
-                            </TouchableOpacity>
-                        </>
-                    }
                 />
+                
+                <TouchableOpacity
+                    style={styles.backButton}
+                    onPress={() => { props.ModalManage(false, props.itemSelected)}}>
+                    <Text style={{ color: 'white' }}>Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.move}
+                    onPress={() => other()}>
+                    <Text style={{ color: 'white' }}>moverse</Text>
+                </TouchableOpacity>
+                        
 
             </Modal>
         </View>
@@ -83,11 +98,6 @@ const ModalQR = function (props) {
 }
 
 const styles = StyleSheet.create({
-    containerStyle: {
-        backgroundColor: 'rgba(2,127,1,0.45)',
-        height: '50%',
-        alignContent: "center"
-    },
     title: {
         fontWeight: 'bold',
         textAlign: 'center',
@@ -98,40 +108,106 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     cameraStyle: {
-        width: '80%',
-        alignSelf: 'center'
+        width: '100%',
+        height:sizeH * 100,
+        backgroundColor: 'white',
+        justifyContent:'center',
+        alignItems:'center'
     },
     MenuIcon:{
         width: sizeW * 4,
         height:sizeW * 4
     },
+    QRTop:{
+        flex:0.5,
+        backgroundColor:'#00000099'
+    },
+    QRCenter:{
+        flex:1,
+        flexDirection:'row'
+    },
+    MarkerQR:{
+        flex:5,
+        backgroundColor: '#00000000',
+        borderWidth:1,
+        borderColor:'blue'
+    },
+    QRLeft:{
+        flex:1,
+        backgroundColor:'#00000099'
+    },
+    QRRight:{
+        flex:1,
+        backgroundColor:'#00000099'
+
+    },
+    QRBottom:{
+        flex:1,
+        backgroundColor:'#00000099'
+    },
+    MarkerQRContainer:{
+      width: WIDTH,
+      height: HEIGHT,
+      flexDirection:'column'
+    },
     menuButton:{
       flex: 2,
-      height: '50%',
+      height:sizeH * 5,
       backgroundColor: 'white',
       alignItems:'center',
       justifyContent:'center',
-      margin:sizeW * 2,
-      marginBottom: sizeH * 3,
-      borderRadius:HEIGHT    
+      borderRadius: 100,
+      marginHorizontal: sizeW * 2,
+      shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.20,
+        shadowRadius: 10,
+        elevation: 10   
     },
     btnAcept: {
       flex: 10,
       flexDirection:'row',  
-      height: sizeH * 4,
+      height: sizeH * 5,
       backgroundColor: 'rgba(2,127,1,1)',
       alignItems:'center',
       justifyContent:'center',
-      margin:sizeW * 2,
-      marginBottom: sizeH * 3,
-      borderRadius: 12
+      borderRadius: 12,
+      marginHorizontal: sizeW * 2 ,
+
+      shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.20,
+        shadowRadius: 10,
+        elevation: 10  
     },
     backButton: {
         backgroundColor: '#FF5B5B',
+        position:'absolute',
+        bottom:sizeH * 10,
         width: sizeW * 50,
-        height: sizeH * 3,
+        height: sizeH * 4,
         margin: sizeW * 3,
         borderRadius: 15,
+        alignSelf:'center',
+        alignItems: 'center',
+        justifyContent:'center'
+    },
+
+    move: {
+        backgroundColor: '#FF5B5B',
+        position:'absolute',
+        bottom:sizeH * 5,
+        width: sizeW * 50,
+        height: sizeH * 4,
+        margin: sizeW * 3,
+        borderRadius: 15,
+        alignSelf:'center',
         alignItems: 'center',
         justifyContent:'center'
     },
@@ -150,8 +226,9 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#BF9DA3'
-    },
+      backgroundColor: 'white',
+      paddingBottom:sizeH * 1
+    }
 })
 
 export default ModalQR;

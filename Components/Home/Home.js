@@ -6,7 +6,8 @@ import {
     Linking,
     Text,
     SafeAreaView,
-    Image
+    Image,
+    BackHandler
 } from 'react-native';
 import React from 'react';
 import RNLocation from 'react-native-location';
@@ -14,7 +15,10 @@ import marker2 from '../../assets/images/golfmark.png';
 import ModalQR from './ModalQR.js';
 import CustomCallout from './CustomCallout.js';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import ServiceInProgress from './ServiceInProgress.js';
+import Axios from 'axios';
+import Spinner from '../Loading/Loading.js';
+import Loading from '../Loading/Loading.js';
 const {width: WIDTH} = Dimensions.get('window');
 const {height: HEIGHT} = Dimensions.get('window');
 const sizeH = HEIGHT / 100;
@@ -29,7 +33,13 @@ class MyLocationMapMarker extends React.Component {
         
         this.state = {
             modalVisible: false,
+            idUser: '',
+            isLoading: false,
+            hours: 0,
+            minutes: 0,
+            seconds: 0,
             statusBarHeight: 0,
+            ActivadedService: true,
             itemSelected: {id: 1, nombre:'TXT23', seating : 5},
             region: null,
             GolfCars: [
@@ -38,8 +48,7 @@ class MyLocationMapMarker extends React.Component {
                 {id: 3, nombre:'TXT33', seating : 2 },
                 {id: 4, nombre:'TXT23' , seating : 3},
                 {id: 5, nombre:'TXT23' , seating : 2},
-                {id: 6, nombre:'TXT23', seating : 3},
-
+                {id: 6, nombre:'TXT23', seating : 3}
             ],
             markerObjects: []
         };
@@ -50,8 +59,22 @@ class MyLocationMapMarker extends React.Component {
             }))
         };
         this._getLocationAsync();
+        this.getUserInfo();
     }
-    
+
+    getUserInfo = async () => {
+        try {
+          const idUser = await AsyncStorage.getItem('idUser');
+          if (idUser !== null) {
+            this.setState({
+              idUser: idUser
+            })
+          }
+        } catch (error) {
+          console.log(error)
+        }
+    }
+
     UNSAFE_componentWillMount() {
         setTimeout(()=>this.setState({statusBarHeight: 1}),500);
     }
@@ -175,9 +198,95 @@ class MyLocationMapMarker extends React.Component {
             modalVisible:bol
         })
     }
+    
+    OpenLoading=(ID, item)=>{
+        this.setState({
+            ...this.state,
+            isLoading: true,
+            modalVisible:false
+        })  
+        setTimeout( () => {
+            this.CreateService(ID, item);
+         },2000);
+    }
+
+    CreateService=(ID, item)=>{
+        var Service = new FormData();
+        Service.append('idUser',this.state.idUser);
+        Service.append('idVehicle', ID.data.split('-#')[1].split('-')[0]);
+
+        
+
+        const headers = {
+            'Content-Type': 'multipart/form-data',
+            "Access-Control-Allow-Origin": "*",
+          }
+
+    Axios.post('https://golfyturf.com/tfmApp/AppWebServices/createService.php',Service,headers)
+    .then((response) => {
+          if(response.data.validation == true)
+          {
+            alert(response.data.message)
+
+            this.setState({
+                ...this.state,
+                itemSelected:item,
+                modalVisible:false,
+                ActivadedService:false,
+                isLoading: false
+            })
+          }
+          else
+          {
+            console.log(response.data)
+            alert(response.data.message)   
+            this.setState({
+                ...this.state,
+                modalVisible:false,
+                isLoading: false
+            })
+          }
+        }).catch((error) => {
+          console.log("Error Creando el Servicio")
+          console.log(error)
+        })
+    }
+
+    StopService = () => {
+        var User = new FormData();
+        User.append('idUser',this.state.idUser);
+        
+
+        const headers = {
+            'Content-Type': 'multipart/form-data',
+            "Access-Control-Allow-Origin": "*",
+          }
+        Axios.post('https://golfyturf.com/tfmApp/AppWebServices/closeService.php',User,headers)
+        .then((response) => {
+            console.log(response.data)
+              if(response.data.validation == true)
+              {
+                const hours = response.data.hours.split(':')[0] + (response.data.days * 24);
+                console.log(hours)
+                this.props.navigation.navigate("PayInfo");
+                this.setState({
+                    ...this.state,
+                    ActivadedService:true
+                })
+              }
+              else
+              {
+                
+              }
+            }).catch((error) => {
+              console.log("Error Consultando el ultimo Servicio")
+              console.log(error)
+        })
+        
+    }
 
     getMarkers(){
-        if(this.state.region !== null)
+        if(this.state.region !== null && this.state.ActivadedService === true)
         {
             return(
                 this.state.GolfCars.map((car) => {
@@ -223,11 +332,55 @@ class MyLocationMapMarker extends React.Component {
         Linking.openURL(url).catch((err) => console.error('An error occurred', err));
     }
 
+    renderBottom(){
+        if(this.state.ActivadedService === true)
+        {
+            return  (<ModalQR 
+                    createService = {(ID,item) => this.OpenLoading(ID,item)} 
+                    modalVisible = {this.state.modalVisible} 
+                    itemSelected = {this.state.itemSelected}
+                    ModalManage = {(bol,item) => this.setModalVisible(bol,item)}
+                    navigation = {this.props.navigation}/>)
+        }
+        else
+        {
+            return  (<ServiceInProgress 
+                hours = {this.state.hours}
+                minutes = {this.state.minutes}
+                seconds = {this.state.seconds}
+                StopService = {() => this.StopService()} />)
+        }
+    }
+    handleBackButton() {
+        ToastAndroid.show('Back button is pressed', ToastAndroid.SHORT);
+        return true;
+    }
+    UNSAFE_componentWillMount() { 
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+        if(this.props.navigation.getParam('hours', null) !== null)
+                {
+                    var t1 = this.props.navigation.getParam('hours', null);
+                    console.log(t1);
+                    
+                    this.setState({
+                        ...this.state,
+                        ActivadedService: false,
+                        hours: t1.split(':')[0] * 1 + (this.props.navigation.getParam('days', 0) * 24) ,
+                        minutes: t1.split(':')[1] * 1,
+                        seconds: t1.split(':')[2] * 1
+                      })  
+                }
+                else{
+                    console.log("No tiene")
+                }
+    }
     render() {
+          
         const { navigation } = this.props;
         return (
             <View style={[styles.container, {paddingTop: this.state.statusBarHeight}]}>
                 <SafeAreaView style={{flex : 0, backgroundColor : 'rgba(2,127,1,0.8)'}} />
+                <Loading isLoading = {this.state.isLoading} message = {'Creando Servicio ...'}/>
                 <MapView
                     mapPadding= {{ top: 0, right: 0, bottom: 0, left: 0 }}
                     showsMyLocationButton= {true}
@@ -240,12 +393,7 @@ class MyLocationMapMarker extends React.Component {
                     zoomEnabled={true}>
                     {this.getMarkers()}
                 </MapView>
-                <ModalQR 
-                    modalVisible = {this.state.modalVisible} 
-                    itemSelected = {this.state.itemSelected}
-                    Remove = {this._removeEventListener}
-                    ModalManage = {(bol,item) => this.setModalVisible(bol,item)}
-                    navigation = {navigation}/>
+                {this.renderBottom()}
             </View>
         );
     }

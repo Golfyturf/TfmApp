@@ -6,6 +6,7 @@ import Login from './Components/Login/Login';
 import Register from './Components/Register/Register';
 import AddCreditCard from './Components/AddCreditCard/AddCreditCard';
 import CreditCardList from './Components/CreditCardList/CreditCardList';
+import SplashScreen from './Components/Login/SplashScreen.js';
 import Home from './Components/Home/Home';
 import LateralMenu from './Components/LateralMenu/LateralMenu.js';
 import PayMentInfo from './Components/PaymentInfo/Payment.js';
@@ -35,6 +36,12 @@ const DrawerNavigator = createDrawerNavigator(
 
 
 const MainNavigator = createStackNavigator({
+  Splash: {
+    screen: SplashScreen,
+    navigationOptions: {
+      header: null
+    },
+  },
   Home: {
     screen: Login,
     navigationOptions: {
@@ -51,11 +58,14 @@ const MainNavigator = createStackNavigator({
     screen:DrawerNavigator,
     navigationOptions: {
       header: null,
-      gesturesEnabled: false,
+      gesturesEnabled: true,
     },
   },
   PayInfo:{
-    screen:PayMentInfo
+    screen:PayMentInfo,
+    navigationOptions: {
+      header: null
+    },
   },
   AddCreditCard: {
     screen: AddCreditCard

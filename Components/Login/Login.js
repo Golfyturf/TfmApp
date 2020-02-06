@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import axios from 'axios';
+
 import AsyncStorage from '@react-native-community/async-storage';
 import {
     StyleSheet,
@@ -40,7 +40,6 @@ class LogIn extends Component {
     GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/userinfo.profile','https://www.googleapis.com/auth/classroom.profile.photos']
     });
-    this._retrieveData(props.navigation)
   }
 
   signIn = async (navigation) => {
@@ -62,8 +61,8 @@ class LogIn extends Component {
     Axios.post('https://golfyturf.com/tfmApp/AppWebServices/createUser.php',NewUser,headers).then((response) => {
       if(response.data.userAlreadyRegistered === true)
       {
-          this._storeData(userInfo.user)
-          navigation.navigate('HomeScreen')
+          this._storeData(userInfo.user, response.data.idUser);
+          navigation.navigate('HomeScreen');
       }
       else
       {
@@ -96,11 +95,15 @@ class LogIn extends Component {
     }
   };
 
-  _storeData = async (user_data) => {
+  _storeData = async (user_data, id) => {
     try {
       await AsyncStorage.setItem('user', user_data.email);
       await AsyncStorage.setItem('nameUser', user_data.givenName);
-      await AsyncStorage.setItem('photo', user_data.photo);
+      await AsyncStorage.setItem('idUser', id);
+      if( user_data.photo !== null)
+      {
+        await AsyncStorage.setItem('photo', user_data.photo);
+      }
     } catch (error) {
       console.log("error store data")
       console.log(error)
@@ -108,17 +111,7 @@ class LogIn extends Component {
   };
 
  
-  _retrieveData = async (navigation) => {
-    try {
-      const value = await AsyncStorage.getItem('user');
-      if (value !== null) {
-        navigation.navigate('HomeScreen')
-      }
-    } catch (error) {
-      // Error retrieving data
-      console.log(error)
-    }
-  };
+ 
 
   updateUserSignUpInfo = (event, type) => {
     var updatedUserSignUpInfo = {
