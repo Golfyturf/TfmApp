@@ -62,7 +62,7 @@ class SplashScreen extends Component {
                           })
                       break;
                       case "2":
-                        this.props.navigation.navigate('PayInfo')
+                        this.props.navigation.navigate('HomeScreen')
                       break;
                       default:
                         this.props.navigation.navigate('Home')

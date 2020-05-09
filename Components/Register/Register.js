@@ -102,12 +102,12 @@ class LogIn extends Component {
           itemStyle={styles.itemStyle}
           selectedValue={this.state.User.IdClub}
           onValueChange={itemValue =>
-            this.updateUserSignUpInfo(itemValue, 'IdClub')
+          this.updateUserSignUpInfo(itemValue, 'IdClub')
           }>
             <Picker.Item label="Seleccione el club al que pertenece" value="0" />
           {this.state.Clubs.map((item) => {
             return (
-              <Picker.Item label= {item.Nombre_completo} value={item.Id}  key={item.Id}/>
+              <Picker.Item label= {item.Nombre_completo} value={item.Id}  key={item.idDetalleParametroArticulo}/>
             )
           })}
         </Picker>
